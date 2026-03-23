@@ -1,260 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parcel management system</title>
-    <link rel="stylesheet" href="pms.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parcel management system</title>
+  <link rel="stylesheet" href="pms.css">
 </head>
+
 <body>
-    <!-- SIDEBAR -->
-<aside class="sb">
-  <div class="sb-brand">
-    <div class="sb-logo">Go<br>Express</div>
-    <div class="sb-sys">ระบบคลังพัสดุ v2.1</div>
-  </div>
-  <nav class="sb-nav">
-    <div class="nav-item active" data-p="warehouse" onclick="nav(this,'warehouse')"><span class="nav-icon">○</span>คลังพัสดุ</div>
-    <div class="nav-item" data-p="receive" onclick="nav(this,'receive')"><span class="nav-icon">↓</span>รับพัสดุเข้า</div>
-    <div class="nav-item" data-p="sendout" onclick="nav(this,'sendout')"><span class="nav-icon">↑</span>จัดส่งออก<span class="nav-badge" id="sendBadge">0</span></div>
-    <div class="nav-item" data-p="tracking" onclick="nav(this,'tracking')"><span class="nav-icon">◎</span>ติดตามพัสดุ</div>
-    <div class="nav-item" data-p="zones" onclick="nav(this,'zones')"><span class="nav-icon">⊞</span>แผนผังโซน</div>
-    <div class="nav-item" data-p="report" onclick="nav(this,'report')"><span class="nav-icon">≡</span>รายงาน</div>
-  </nav>
-  <div class="sb-foot">
-    <div class="zone-row">
-      <div class="zp" style="background:var(--za)" onclick="filterZoneGo('A')">A</div>
-      <div class="zp" style="background:var(--zb)" onclick="filterZoneGo('B')">B</div>
-      <div class="zp" style="background:var(--zc)" onclick="filterZoneGo('C')">C</div>
-      <div class="zp" style="background:var(--zd)" onclick="filterZoneGo('D')">D</div>
-      <div class="zp" style="background:var(--ze)" onclick="filterZoneGo('E')">E</div>
+  <!-- SIDEBAR -->
+  <aside class="sb">
+    <div class="sb-brand">
+      <div class="sb-logo">Go<br>Express</div>
+      <div class="sb-sys">ระบบคลังพัสดุ v2.1</div>
     </div>
-    <div class="sb-user">สุภาพ ใจเย็น</div>
-    <div class="sb-shift">กะเช้า 06:00–14:00</div>
-  </div>
-</aside>
-
-<!-- MAIN -->
-<main class="main">
-  <header class="topbar">
-    <div><div class="tb-title" id="topTitle">คลังพัสดุ — สาขากรุงเทพฯ</div><div class="tb-meta" id="topMeta"></div></div>
-    <button class="btn btn-orange" onclick="nav(document.querySelector('[data-p=receive]'),'receive')">+ รับพัสดุใหม่</button>
-  </header>
-  <div class="content">
-
-    <!-- PAGE: คลังพัสดุ -->
-    <div class="page active" id="page-warehouse">
-      <div class="ph">
-        <div><div class="ph-title">คลังพัสดุ</div><div class="ph-sub" id="whSub">พัสดุทั้งหมด 0 รายการ</div></div>
-        <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
-          <div class="overdue-pill" id="overduePill" onclick="filterStatusGo('s-late')"><div class="blink"></div><span id="overdueLabel">เกินกำหนด 0 ชิ้น</span></div>
-          <button class="btn btn-red btn-sm" onclick="deleteSelected()">🗑 ลบที่เลือก</button>
-          <button class="btn btn-green btn-sm" onclick="sendSelectedWH()">📤 จัดส่งที่เลือก</button>
-        </div>
+    <nav class="sb-nav">
+      <div class="nav-item active" data-p="warehouse" onclick="nav(this,'warehouse')"><span
+          class="nav-icon">○</span>คลังพัสดุ</div>
+      <div class="nav-item" data-p="receive" onclick="nav(this,'receive')"><span class="nav-icon">↓</span>รับพัสดุเข้า
       </div>
-      <div class="srow">
-        <div class="sbox"><span style="color:var(--text-muted)">🔍</span><input id="whQ" placeholder="ค้นหา ID, ผู้รับ, ปลายทาง..." oninput="renderWH()"></div>
-        <div class="zbtns">
-          <button class="zbtn all on" data-z="ALL" onclick="setZF(this,'ALL')">ALL</button>
-          <button class="zbtn" data-z="A" onclick="setZF(this,'A')">A</button>
-          <button class="zbtn" data-z="B" onclick="setZF(this,'B')">B</button>
-          <button class="zbtn" data-z="C" onclick="setZF(this,'C')">C</button>
-          <button class="zbtn" data-z="D" onclick="setZF(this,'D')">D</button>
-          <button class="zbtn" data-z="E" onclick="setZF(this,'E')">E</button>
-        </div>
+      <div class="nav-item" data-p="sendout" onclick="nav(this,'sendout')"><span class="nav-icon">↑</span>จัดส่งออก<span
+          class="nav-badge" id="sendBadge">0</span></div>
+      <div class="nav-item" data-p="tracking" onclick="nav(this,'tracking')"><span class="nav-icon">◎</span>ติดตามพัสดุ
       </div>
-      <div class="spills" id="statusPills">
-        <div class="spill on" data-s="all" onclick="setSF(this,'all')"><span class="dot" style="background:var(--sb)"></span>ทั้งหมด</div>
-        <div class="spill" data-s="s-recv" onclick="setSF(this,'s-recv')"><span class="dot" style="background:var(--blue)"></span>รับเข้าคลัง</div>
-        <div class="spill" data-s="s-sort" onclick="setSF(this,'s-sort')"><span class="dot" style="background:var(--green)"></span>กำลังจัดเรียง</div>
-        <div class="spill" data-s="s-wait" onclick="setSF(this,'s-wait')"><span class="dot" style="background:var(--yellow)"></span>รอจัดส่ง</div>
-        <div class="spill" data-s="s-late" onclick="setSF(this,'s-late')"><span class="dot" style="background:var(--red)"></span>เกินกำหนด</div>
-        <div class="spill" data-s="s-sent" onclick="setSF(this,'s-sent')"><span class="dot" style="background:var(--green)"></span>จัดส่งแล้ว</div>
+      <div class="nav-item" data-p="zones" onclick="nav(this,'zones')"><span class="nav-icon">⊞</span>แผนผังโซน</div>
+      <div class="nav-item" data-p="report" onclick="nav(this,'report')"><span class="nav-icon">≡</span>รายงาน</div>
+    </nav>
+    <div class="sb-foot">
+      <div class="zone-row">
+        <div class="zp" style="background:var(--za)" onclick="filterZoneGo('A')">A</div>
+        <div class="zp" style="background:var(--zb)" onclick="filterZoneGo('B')">B</div>
+        <div class="zp" style="background:var(--zc)" onclick="filterZoneGo('C')">C</div>
+        <div class="zp" style="background:var(--zd)" onclick="filterZoneGo('D')">D</div>
+        <div class="zp" style="background:var(--ze)" onclick="filterZoneGo('E')">E</div>
       </div>
-      <div class="twrap">
-        <table><thead><tr>
-          <th><input type="checkbox" class="chk" id="chkAll" onclick="toggleAll(this)"></th>
-          <th>TRACKING ID</th><th>ผู้ส่ง</th><th>ผู้รับ / ปลายทาง</th>
-          <th>น้ำหนัก</th><th>ประเภท</th><th>โซน</th><th>กำหนดส่ง</th><th>สถานะ</th><th>จัดการ</th>
-        </tr></thead>
-        <tbody id="whBody"></tbody></table>
-      </div>
+      <div class="sb-user">สุภาพ ใจเย็น</div>
+      <div class="sb-shift">กะเช้า 06:00–14:00</div>
     </div>
+  </aside>
 
-    <!-- PAGE: รับพัสดุเข้า -->
-    <div class="page" id="page-receive">
-      <div class="ph"><div><div class="ph-title">รับพัสดุเข้าคลัง</div><div class="ph-sub">กรอกข้อมูลพัสดุที่รับเข้าใหม่</div></div></div>
-      <div class="wiz-steps">
-        <div class="ws"><div class="ws-c cur" id="ws1">1</div><div class="ws-l cur" id="wl1">ข้อมูลพัสดุ</div></div>
-        <div class="wline" id="wln1"></div>
-        <div class="ws"><div class="ws-c" id="ws2">2</div><div class="ws-l" id="wl2">ตำแหน่งจัดเก็บ</div></div>
-        <div class="wline" id="wln2"></div>
-        <div class="ws"><div class="ws-c" id="ws3">3</div><div class="ws-l" id="wl3">ยืนยัน</div></div>
+  <!-- MAIN -->
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <div class="tb-title" id="topTitle">คลังพัสดุ — สาขากรุงเทพฯ</div>
+        <div class="tb-meta" id="topMeta"></div>
       </div>
-      <!-- Step 1 -->
-      <div class="wform" id="step1">
-        <div class="fgrid">
-          <div class="fg full"><label class="flabel">ชื่อผู้ส่ง *</label><input class="finput" id="f-sender" placeholder="บริษัท / ชื่อผู้ส่ง"></div>
-          <div class="fg"><label class="flabel">ต้นทาง</label><input class="finput" id="f-from" placeholder="เช่น กรุงเทพฯ"></div>
-          <div class="fg"><label class="flabel">ชื่อผู้รับ *</label><input class="finput" id="f-recv" placeholder="ชื่อผู้รับ"></div>
-          <div class="fg"><label class="flabel">ปลายทาง *</label><input class="finput" id="f-dest" placeholder="เช่น เชียงใหม่"></div>
-          <div class="fg"><label class="flabel">น้ำหนัก (KG) *</label><input class="finput" id="f-weight" type="number" step="0.1" min="0.1" placeholder="0.0"></div>
-          <div class="fg"><label class="flabel">ประเภทพัสดุ</label>
-            <select class="fsel" id="f-type">
-              <option value="📄">📄 เอกสาร</option><option value="📦" selected>📦 สินค้า</option>
-              <option value="🖥️">🖥️ อิเล็กทรอนิกส์</option><option value="🏗️">🏗️ ขนาดใหญ่</option>
-              <option value="🫧">🫧 เปราะบาง</option>
-            </select>
+      <button class="btn btn-orange" onclick="nav(document.querySelector('[data-p=receive]'),'receive')">+
+        รับพัสดุใหม่</button>
+      <a href="../index.html" class="btn btn-outline btn-sm"
+        style="display:flex;align-items:center;gap:6px;color: rgb(0, 0, 0);">
+        🏠 หน้าแรก
+      </a>
+    </header>
+    <div class="content">
+
+      <!-- PAGE: คลังพัสดุ -->
+      <div class="page active" id="page-warehouse">
+        <div class="ph">
+          <div>
+            <div class="ph-title">คลังพัสดุ</div>
+            <div class="ph-sub" id="whSub">พัสดุทั้งหมด 0 รายการ</div>
           </div>
-          <div class="fg"><label class="flabel">กำหนดส่ง *</label><input class="finput" id="f-dl" type="date"></div>
-          <div class="fg"><label class="flabel">หมายเหตุ</label><input class="finput" id="f-note" placeholder="(ไม่บังคับ)"></div>
+          <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+            <div class="overdue-pill" id="overduePill" onclick="filterStatusGo('s-late')">
+              <div class="blink"></div><span id="overdueLabel">เกินกำหนด 0 ชิ้น</span>
+            </div>
+            <button class="btn btn-red btn-sm" onclick="deleteSelected()">🗑 ลบที่เลือก</button>
+            <button class="btn btn-green btn-sm" onclick="sendSelectedWH()">📤 จัดส่งที่เลือก</button>
+          </div>
         </div>
-        <button class="btn-next" onclick="wNext(2)">ถัดไป →</button>
+        <div class="srow">
+          <div class="sbox"><span style="color:var(--text-muted)">🔍</span><input id="whQ"
+              placeholder="ค้นหา ID, ผู้รับ, ปลายทาง..." oninput="renderWH()"></div>
+          <div class="zbtns">
+            <button class="zbtn all on" data-z="ALL" onclick="setZF(this,'ALL')">ALL</button>
+            <button class="zbtn" data-z="A" onclick="setZF(this,'A')">A</button>
+            <button class="zbtn" data-z="B" onclick="setZF(this,'B')">B</button>
+            <button class="zbtn" data-z="C" onclick="setZF(this,'C')">C</button>
+            <button class="zbtn" data-z="D" onclick="setZF(this,'D')">D</button>
+            <button class="zbtn" data-z="E" onclick="setZF(this,'E')">E</button>
+          </div>
+        </div>
+        <div class="spills" id="statusPills">
+          <div class="spill on" data-s="all" onclick="setSF(this,'all')"><span class="dot"
+              style="background:var(--sb)"></span>ทั้งหมด</div>
+          <div class="spill" data-s="s-recv" onclick="setSF(this,'s-recv')"><span class="dot"
+              style="background:var(--blue)"></span>รับเข้าคลัง</div>
+          <div class="spill" data-s="s-sort" onclick="setSF(this,'s-sort')"><span class="dot"
+              style="background:var(--green)"></span>กำลังจัดเรียง</div>
+          <div class="spill" data-s="s-wait" onclick="setSF(this,'s-wait')"><span class="dot"
+              style="background:var(--yellow)"></span>รอจัดส่ง</div>
+          <div class="spill" data-s="s-late" onclick="setSF(this,'s-late')"><span class="dot"
+              style="background:var(--red)"></span>เกินกำหนด</div>
+          <div class="spill" data-s="s-sent" onclick="setSF(this,'s-sent')"><span class="dot"
+              style="background:var(--green)"></span>จัดส่งแล้ว</div>
+        </div>
+        <div class="twrap">
+          <table>
+            <thead>
+              <tr>
+                <th><input type="checkbox" class="chk" id="chkAll" onclick="toggleAll(this)"></th>
+                <th>TRACKING ID</th>
+                <th>ผู้ส่ง</th>
+                <th>ผู้รับ / ปลายทาง</th>
+                <th>น้ำหนัก</th>
+                <th>ประเภท</th>
+                <th>โซน</th>
+                <th>กำหนดส่ง</th>
+                <th>สถานะ</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="whBody"></tbody>
+          </table>
+        </div>
       </div>
-      <!-- Step 2 -->
-      <div class="wform" id="step2" style="display:none">
-        <div style="font-size:15px;font-weight:700;margin-bottom:14px">เลือกโซนจัดเก็บ</div>
-        <div class="zpick" id="zonePick"></div>
-        <div id="slotSec" style="display:none;margin-top:16px">
-          <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:7px">เลือกช่องว่าง <span style="font-size:11px">(สีเทา)</span></div>
-          <div class="slot-grid" id="slotPick"></div>
-          <div style="margin-top:7px;font-size:12.5px;color:var(--text-muted)">เลือกแล้ว: <strong id="pickedLabel" style="color:var(--orange)">—</strong></div>
+
+      <!-- PAGE: รับพัสดุเข้า -->
+      <div class="page" id="page-receive">
+        <div class="ph">
+          <div>
+            <div class="ph-title">รับพัสดุเข้าคลัง</div>
+            <div class="ph-sub">กรอกข้อมูลพัสดุที่รับเข้าใหม่</div>
+          </div>
         </div>
-        <div style="display:flex;gap:9px;margin-top:18px">
-          <button class="btn btn-ghost" onclick="wNext(1)">← ย้อนกลับ</button>
-          <button class="btn-next" style="flex:1;margin-top:0" onclick="wNext(3)">ถัดไป →</button>
+        <div class="wiz-steps">
+          <div class="ws">
+            <div class="ws-c cur" id="ws1">1</div>
+            <div class="ws-l cur" id="wl1">ข้อมูลพัสดุ</div>
+          </div>
+          <div class="wline" id="wln1"></div>
+          <div class="ws">
+            <div class="ws-c" id="ws2">2</div>
+            <div class="ws-l" id="wl2">ตำแหน่งจัดเก็บ</div>
+          </div>
+          <div class="wline" id="wln2"></div>
+          <div class="ws">
+            <div class="ws-c" id="ws3">3</div>
+            <div class="ws-l" id="wl3">ยืนยัน</div>
+          </div>
+        </div>
+        <!-- Step 1 -->
+        <div class="wform" id="step1">
+          <div class="fgrid">
+            <div class="fg full"><label class="flabel">ชื่อผู้ส่ง *</label><input class="finput" id="f-sender"
+                placeholder="บริษัท / ชื่อผู้ส่ง"></div>
+            <div class="fg"><label class="flabel">ต้นทาง</label><input class="finput" id="f-from"
+                placeholder="เช่น กรุงเทพฯ"></div>
+            <div class="fg"><label class="flabel">ชื่อผู้รับ *</label><input class="finput" id="f-recv"
+                placeholder="ชื่อผู้รับ"></div>
+            <div class="fg"><label class="flabel">ปลายทาง *</label><input class="finput" id="f-dest"
+                placeholder="เช่น เชียงใหม่"></div>
+            <div class="fg"><label class="flabel">น้ำหนัก (KG) *</label><input class="finput" id="f-weight"
+                type="number" step="0.1" min="0.1" placeholder="0.0"></div>
+            <div class="fg"><label class="flabel">ประเภทพัสดุ</label>
+              <select class="fsel" id="f-type">
+                <option value="📄">📄 เอกสาร</option>
+                <option value="📦" selected>📦 สินค้า</option>
+                <option value="🖥️">🖥️ อิเล็กทรอนิกส์</option>
+                <option value="🏗️">🏗️ ขนาดใหญ่</option>
+                <option value="🫧">🫧 เปราะบาง</option>
+              </select>
+            </div>
+            <div class="fg"><label class="flabel">กำหนดส่ง *</label><input class="finput" id="f-dl" type="date"></div>
+            <div class="fg"><label class="flabel">หมายเหตุ</label><input class="finput" id="f-note"
+                placeholder="(ไม่บังคับ)"></div>
+          </div>
+          <button class="btn-next" onclick="wNext(2)">ถัดไป →</button>
+        </div>
+        <!-- Step 2 -->
+        <div class="wform" id="step2" style="display:none">
+          <div style="font-size:15px;font-weight:700;margin-bottom:14px">เลือกโซนจัดเก็บ</div>
+          <div class="zpick" id="zonePick"></div>
+          <div id="slotSec" style="display:none;margin-top:16px">
+            <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:7px">เลือกช่องว่าง <span
+                style="font-size:11px">(สีเทา)</span></div>
+            <div class="slot-grid" id="slotPick"></div>
+            <div style="margin-top:7px;font-size:12.5px;color:var(--text-muted)">เลือกแล้ว: <strong id="pickedLabel"
+                style="color:var(--orange)">—</strong></div>
+          </div>
+          <div style="display:flex;gap:9px;margin-top:18px">
+            <button class="btn btn-ghost" onclick="wNext(1)">← ย้อนกลับ</button>
+            <button class="btn-next" style="flex:1;margin-top:0" onclick="wNext(3)">ถัดไป →</button>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="wform" id="step3" style="display:none">
+          <div style="font-size:15px;font-weight:700;margin-bottom:14px">✅ ยืนยันข้อมูลพัสดุ</div>
+          <div id="confirmGrid"
+            style="background:var(--bg);border-radius:9px;padding:16px;border:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13.5px;line-height:2.1;margin-bottom:14px">
+          </div>
+          <div style="display:flex;gap:9px">
+            <button class="btn btn-ghost" onclick="wNext(2)">← แก้ไข</button>
+            <button class="btn-next" style="flex:1;margin-top:0;background:var(--green)" id="confirmBtn">✅
+              ยืนยันรับพัสดุเข้าคลัง</button>
+          </div>
         </div>
       </div>
-      <!-- Step 3 -->
-      <div class="wform" id="step3" style="display:none">
-        <div style="font-size:15px;font-weight:700;margin-bottom:14px">✅ ยืนยันข้อมูลพัสดุ</div>
-        <div id="confirmGrid" style="background:var(--bg);border-radius:9px;padding:16px;border:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13.5px;line-height:2.1;margin-bottom:14px"></div>
-        <div style="display:flex;gap:9px">
-          <button class="btn btn-ghost" onclick="wNext(2)">← แก้ไข</button>
-          <button class="btn-next" style="flex:1;margin-top:0;background:var(--green)" id="confirmBtn">✅ ยืนยันรับพัสดุเข้าคลัง</button>
+
+      <!-- PAGE: จัดส่งออก -->
+      <div class="page" id="page-sendout">
+        <div class="ph">
+          <div>
+            <div class="ph-title">จัดส่งพัสดุออก</div>
+            <div class="ph-sub" id="sendSub">รอจัดส่ง 0 รายการ</div>
+          </div>
+          <div style="display:flex;gap:7px">
+            <button class="btn btn-ghost btn-sm" onclick="selAllSend()">เลือกทั้งหมด</button>
+            <button class="btn btn-dark btn-sm" onclick="openSendConfirm()">📤 จัดส่งที่เลือก</button>
+          </div>
         </div>
+        <div class="twrap">
+          <table>
+            <thead>
+              <tr>
+                <th><input type="checkbox" class="chk" id="sendAll" onclick="toggleSendAll(this)"></th>
+                <th>TRACKING ID</th>
+                <th>ผู้รับ / ปลายทาง</th>
+                <th>โซน/ช่อง</th>
+                <th>น้ำหนัก</th>
+                <th>กำหนดส่ง</th>
+                <th>สถานะ</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="sendBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PAGE: ติดตามพัสดุ -->
+      <div class="page" id="page-tracking">
+        <div class="ph">
+          <div>
+            <div class="ph-title">ติดตามพัสดุ</div>
+            <div class="ph-sub">ค้นหาด้วย Tracking ID หรือชื่อผู้รับ</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div class="tbox"><span style="color:var(--text-muted)">🔍</span><input id="trackQ"
+              placeholder="เช่น TH240307001 หรือ คุณสมชาย..." oninput="renderTrack()"></div>
+          <button class="btn btn-dark" onclick="renderTrack()">ค้นหา</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('trackQ').value='';renderTrack()">✕
+            ล้าง</button>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted)" id="trackLabel">พัสดุทั้งหมดในระบบ</div>
+        <div id="trackList" style="display:flex;flex-direction:column;gap:7px"></div>
+      </div>
+
+      <!-- PAGE: แผนผังโซน -->
+      <div class="page" id="page-zones">
+        <div class="ph">
+          <div>
+            <div class="ph-title">แผนผังโซน</div>
+            <div class="ph-sub">ภาพรวมพื้นที่จัดเก็บ</div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="renderZones()">🔄 รีเฟรช</button>
+        </div>
+        <div class="zone5" id="zonePage"></div>
+      </div>
+
+      <!-- PAGE: รายงาน -->
+      <div class="page" id="page-report">
+        <div class="ph">
+          <div>
+            <div class="ph-title">รายงานสรุป</div>
+            <div class="ph-sub" id="rDate"></div>
+          </div>
+          <div style="display:flex;gap:7px">
+            <button class="btn btn-outline btn-sm" onclick="renderReport()">🔄 รีเฟรช</button>
+            <button class="btn btn-dark btn-sm" onclick="window.print()">🖨️ พิมพ์ / PDF</button>
+          </div>
+        </div>
+        <div class="stats4" id="rStats"></div>
+        <div class="rcharts" id="rCharts"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL: แก้ไข/ดูรายละเอียด -->
+  <div class="ov" id="ov-detail">
+    <div class="modal wide">
+      <div class="mhead">
+        <div class="mtitle" id="detailTitle">รายละเอียดพัสดุ</div>
+        <div class="mclose" onclick="closeOv('detail')">✕</div>
+      </div>
+      <div class="mbody">
+        <div id="detailInfo"
+          style="background:var(--bg);border-radius:9px;padding:14px;border:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13.5px;line-height:2.1">
+        </div>
+        <div class="fg"><label class="flabel">เปลี่ยนสถานะเป็น</label>
+          <select class="fsel" id="detailStatus">
+            <option value="s-recv">รับเข้าคลัง</option>
+            <option value="s-sort">กำลังจัดเรียง</option>
+            <option value="s-wait">รอจัดส่ง</option>
+            <option value="s-late">เกินกำหนด</option>
+            <option value="s-sent">จัดส่งแล้ว</option>
+          </select>
+        </div>
+        <div class="fg"><label class="flabel">หมายเหตุ</label><input class="finput" id="detailNote"
+            placeholder="(ไม่บังคับ)"></div>
+        <div
+          style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace">
+          ประวัติสถานะ</div>
+        <div class="tl" id="detailTL"></div>
+      </div>
+      <div class="mfoot">
+        <button class="btn btn-ghost btn-sm" onclick="closeOv('detail')">ยกเลิก</button>
+        <button class="btn btn-orange btn-sm" onclick="saveDetail()">💾 บันทึกสถานะ</button>
+        <button class="btn btn-green btn-sm" onclick="markSent()">📤 จัดส่งเลย</button>
       </div>
     </div>
-
-    <!-- PAGE: จัดส่งออก -->
-    <div class="page" id="page-sendout">
-      <div class="ph">
-        <div><div class="ph-title">จัดส่งพัสดุออก</div><div class="ph-sub" id="sendSub">รอจัดส่ง 0 รายการ</div></div>
-        <div style="display:flex;gap:7px">
-          <button class="btn btn-ghost btn-sm" onclick="selAllSend()">เลือกทั้งหมด</button>
-          <button class="btn btn-dark btn-sm" onclick="openSendConfirm()">📤 จัดส่งที่เลือก</button>
-        </div>
-      </div>
-      <div class="twrap">
-        <table><thead><tr>
-          <th><input type="checkbox" class="chk" id="sendAll" onclick="toggleSendAll(this)"></th>
-          <th>TRACKING ID</th><th>ผู้รับ / ปลายทาง</th><th>โซน/ช่อง</th><th>น้ำหนัก</th><th>กำหนดส่ง</th><th>สถานะ</th><th>จัดการ</th>
-        </tr></thead><tbody id="sendBody"></tbody></table>
-      </div>
-    </div>
-
-    <!-- PAGE: ติดตามพัสดุ -->
-    <div class="page" id="page-tracking">
-      <div class="ph"><div><div class="ph-title">ติดตามพัสดุ</div><div class="ph-sub">ค้นหาด้วย Tracking ID หรือชื่อผู้รับ</div></div></div>
-      <div style="display:flex;gap:8px">
-        <div class="tbox"><span style="color:var(--text-muted)">🔍</span><input id="trackQ" placeholder="เช่น TH240307001 หรือ คุณสมชาย..." oninput="renderTrack()"></div>
-        <button class="btn btn-dark" onclick="renderTrack()">ค้นหา</button>
-        <button class="btn btn-ghost" onclick="document.getElementById('trackQ').value='';renderTrack()">✕ ล้าง</button>
-      </div>
-      <div style="font-size:12px;color:var(--text-muted)" id="trackLabel">พัสดุทั้งหมดในระบบ</div>
-      <div id="trackList" style="display:flex;flex-direction:column;gap:7px"></div>
-    </div>
-
-    <!-- PAGE: แผนผังโซน -->
-    <div class="page" id="page-zones">
-      <div class="ph"><div><div class="ph-title">แผนผังโซน</div><div class="ph-sub">ภาพรวมพื้นที่จัดเก็บ</div></div>
-        <button class="btn btn-outline btn-sm" onclick="renderZones()">🔄 รีเฟรช</button>
-      </div>
-      <div class="zone5" id="zonePage"></div>
-    </div>
-
-    <!-- PAGE: รายงาน -->
-    <div class="page" id="page-report">
-      <div class="ph">
-        <div><div class="ph-title">รายงานสรุป</div><div class="ph-sub" id="rDate"></div></div>
-        <div style="display:flex;gap:7px">
-          <button class="btn btn-outline btn-sm" onclick="renderReport()">🔄 รีเฟรช</button>
-          <button class="btn btn-dark btn-sm" onclick="window.print()">🖨️ พิมพ์ / PDF</button>
-        </div>
-      </div>
-      <div class="stats4" id="rStats"></div>
-      <div class="rcharts" id="rCharts"></div>
-    </div>
-
   </div>
-</main>
 
-<!-- MODAL: แก้ไข/ดูรายละเอียด -->
-<div class="ov" id="ov-detail">
-  <div class="modal wide">
-    <div class="mhead"><div class="mtitle" id="detailTitle">รายละเอียดพัสดุ</div><div class="mclose" onclick="closeOv('detail')">✕</div></div>
-    <div class="mbody">
-      <div id="detailInfo" style="background:var(--bg);border-radius:9px;padding:14px;border:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13.5px;line-height:2.1"></div>
-      <div class="fg"><label class="flabel">เปลี่ยนสถานะเป็น</label>
-        <select class="fsel" id="detailStatus">
-          <option value="s-recv">รับเข้าคลัง</option>
-          <option value="s-sort">กำลังจัดเรียง</option>
-          <option value="s-wait">รอจัดส่ง</option>
-          <option value="s-late">เกินกำหนด</option>
-          <option value="s-sent">จัดส่งแล้ว</option>
-        </select>
+  <!-- MODAL: ยืนยันลบ -->
+  <div class="ov" id="ov-del">
+    <div class="modal" style="width:360px">
+      <div class="mhead">
+        <div class="mtitle">ยืนยันการลบ</div>
+        <div class="mclose" onclick="closeOv('del')">✕</div>
       </div>
-      <div class="fg"><label class="flabel">หมายเหตุ</label><input class="finput" id="detailNote" placeholder="(ไม่บังคับ)"></div>
-      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace">ประวัติสถานะ</div>
-      <div class="tl" id="detailTL"></div>
-    </div>
-    <div class="mfoot">
-      <button class="btn btn-ghost btn-sm" onclick="closeOv('detail')">ยกเลิก</button>
-      <button class="btn btn-orange btn-sm" onclick="saveDetail()">💾 บันทึกสถานะ</button>
-      <button class="btn btn-green btn-sm" onclick="markSent()">📤 จัดส่งเลย</button>
+      <div class="mbody">
+        <div class="cbox">
+          <div class="cbox-icon">🗑️</div>
+          <div class="cbox-title">ลบพัสดุนี้?</div>
+          <div class="cbox-desc">ลบ <strong id="delId" style="color:var(--red)"></strong>
+            ออกจากระบบ<br>ไม่สามารถกู้คืนได้</div>
+        </div>
+      </div>
+      <div class="mfoot"><button class="btn btn-ghost btn-sm" onclick="closeOv('del')">ยกเลิก</button><button
+          class="btn btn-red btn-sm" onclick="doDelete()">🗑 ลบเลย</button></div>
     </div>
   </div>
-</div>
 
-<!-- MODAL: ยืนยันลบ -->
-<div class="ov" id="ov-del">
-  <div class="modal" style="width:360px">
-    <div class="mhead"><div class="mtitle">ยืนยันการลบ</div><div class="mclose" onclick="closeOv('del')">✕</div></div>
-    <div class="mbody">
-      <div class="cbox"><div class="cbox-icon">🗑️</div>
-        <div class="cbox-title">ลบพัสดุนี้?</div>
-        <div class="cbox-desc">ลบ <strong id="delId" style="color:var(--red)"></strong> ออกจากระบบ<br>ไม่สามารถกู้คืนได้</div>
+  <!-- MODAL: ยืนยันจัดส่ง -->
+  <div class="ov" id="ov-send">
+    <div class="modal" style="width:400px">
+      <div class="mhead">
+        <div class="mtitle">📤 ยืนยันจัดส่ง</div>
+        <div class="mclose" onclick="closeOv('send')">✕</div>
       </div>
+      <div class="mbody">
+        <div class="cbox">
+          <div class="cbox-icon">📦</div>
+          <div class="cbox-title" id="sendTitle">จัดส่งพัสดุ?</div>
+          <div class="cbox-desc" id="sendDesc"></div>
+        </div>
+        <div class="fg"><label class="flabel">พนักงานขับรถ</label>
+          <select class="fsel" id="driverSel">
+            <option>สมชาย รักงาน</option>
+            <option>วิชัย ขยัน</option>
+            <option>ประสิทธิ์ ดีใจ</option>
+          </select>
+        </div>
+        <div class="fg"><label class="flabel">ทะเบียนรถ</label>
+          <select class="fsel" id="truckSel">
+            <option>กข-1234 กรุงเทพ</option>
+            <option>งจ-5678 กรุงเทพ</option>
+            <option>ขค-9012 นนทบุรี</option>
+          </select>
+        </div>
+      </div>
+      <div class="mfoot"><button class="btn btn-ghost btn-sm" onclick="closeOv('send')">ยกเลิก</button><button
+          class="btn btn-green btn-sm" onclick="doSend()">✅ ยืนยันจัดส่ง</button></div>
     </div>
-    <div class="mfoot"><button class="btn btn-ghost btn-sm" onclick="closeOv('del')">ยกเลิก</button><button class="btn btn-red btn-sm" onclick="doDelete()">🗑 ลบเลย</button></div>
   </div>
-</div>
 
-<!-- MODAL: ยืนยันจัดส่ง -->
-<div class="ov" id="ov-send">
-  <div class="modal" style="width:400px">
-    <div class="mhead"><div class="mtitle">📤 ยืนยันจัดส่ง</div><div class="mclose" onclick="closeOv('send')">✕</div></div>
-    <div class="mbody">
-      <div class="cbox"><div class="cbox-icon">📦</div>
-        <div class="cbox-title" id="sendTitle">จัดส่งพัสดุ?</div>
-        <div class="cbox-desc" id="sendDesc"></div>
-      </div>
-      <div class="fg"><label class="flabel">พนักงานขับรถ</label>
-        <select class="fsel" id="driverSel">
-          <option>สมชาย รักงาน</option><option>วิชัย ขยัน</option><option>ประสิทธิ์ ดีใจ</option>
-        </select>
-      </div>
-      <div class="fg"><label class="flabel">ทะเบียนรถ</label>
-        <select class="fsel" id="truckSel">
-          <option>กข-1234 กรุงเทพ</option><option>งจ-5678 กรุงเทพ</option><option>ขค-9012 นนทบุรี</option>
-        </select>
-      </div>
-    </div>
-    <div class="mfoot"><button class="btn btn-ghost btn-sm" onclick="closeOv('send')">ยกเลิก</button><button class="btn btn-green btn-sm" onclick="doSend()">✅ ยืนยันจัดส่ง</button></div>
-  </div>
-</div>
-
-<div class="tw" id="toastWrap"></div>
-<script src="pms.js"></script>
+  <div class="tw" id="toastWrap"></div>
+  <script src="pms.js"></script>
 </body>
+
 </html>

@@ -1,222 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payroll</title>
-    <link rel="stylesheet" href="payroll.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payroll</title>
+  <link rel="stylesheet" href="payroll.css">
 </head>
+
 <body>
-    <!-- ══════ TOPNAV ══════ -->
-<nav class="topnav">
-  <div class="tn-brand">
-    <div class="tn-logo-icon">🚚</div>
-    <div class="tn-brand-text">
-      <div class="tn-name">GoExpress</div>
-      <div class="tn-sub">Payroll Management</div>
+  <!-- ══════ TOPNAV ══════ -->
+  <nav class="topnav">
+    <div class="tn-brand">
+      <div class="tn-logo-icon">🚚</div>
+      <div class="tn-brand-text">
+        <div class="tn-name">GoExpress</div>
+        <div class="tn-sub">Payroll Management</div>
+      </div>
+    </div>
+    <div class="tn-tabs">
+      <button class="tn-tab act" onclick="switchTab('overview',this)">◆ ภาพรวม</button>
+      <button class="tn-tab" onclick="switchTab('employee',this)">👥 พนักงาน</button>
+      <button class="tn-tab" onclick="switchTab('report',this)">≋ รายงาน</button>
+    </div>
+    <div class="tn-right">
+      <!-- ปุ่มกลับ -->
+      <a href="../index.html" class="btn btn-outline btn-sm"
+        style="display:flex;align-items:center;gap:6px;color: white;">
+        🏠 หน้าแรก
+      </a>
+      <div class="period-btn">
+        <select id="selMonth" onchange="recalc()">
+          <option value="3">มี.ค.</option>
+          <option value="2">ก.พ.</option>
+          <option value="1">ม.ค.</option>
+          <option value="12">ธ.ค.</option>
+        </select>
+        ▾
+      </div>
+      <div class="period-btn">
+        <select id="selYear" onchange="recalc()">
+          <option value="2569">2569</option>
+          <option value="2568">2568</option>
+        </select>
+        ▾
+      </div>
+      <button class="btn-approve" onclick="approveAll()">✓ อนุมัติจ่ายเงิน</button>
+    </div>
+  </nav>
+
+  <!-- ══════ OVERVIEW PAGE ══════ -->
+  <div class="page act" id="page-overview">
+    <div class="pg-title">ภาพรวม Payroll</div>
+    <div class="pg-sub" id="ov-sub">มี.ค. 2569 · 19 พนักงาน</div>
+
+    <div class="stat-cards">
+      <div class="sc">
+        <div class="sc-icon">💳</div>
+        <div class="sc-label">ยอดจ่ายสุทธิ</div>
+        <div class="sc-val blue" id="sc-net">฿0</div>
+        <div class="sc-sub" id="sc-count">0 คน</div>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">💰</div>
+        <div class="sc-label">เงินเดือนรวม</div>
+        <div class="sc-val teal" id="sc-base">฿0</div>
+        <div class="sc-sub">ฐานเงินเดือน</div>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">⏱</div>
+        <div class="sc-label">OT รวม</div>
+        <div class="sc-val orange" id="sc-ot">฿0</div>
+        <div class="sc-sub">ค่าล่วงเวลา</div>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">✂️</div>
+        <div class="sc-label">หักมาสายรวม</div>
+        <div class="sc-val red" id="sc-late">฿0</div>
+        <div class="sc-sub">หักตามจำนวนวัน</div>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">👥</div>
+        <div class="sc-label">พนักงานทั้งหมด</div>
+        <div class="sc-val purple" id="sc-emp">0</div>
+        <div class="sc-sub">คนในระบบ</div>
+      </div>
+    </div>
+
+    <div class="ov-grid">
+      <!-- dept summary -->
+      <div class="card">
+        <div class="card-title">สรุปรายแผนก</div>
+        <table class="dept-table">
+          <thead>
+            <tr>
+              <th>แผนก</th>
+              <th class="r">คน</th>
+              <th class="r">เงินเดือน</th>
+              <th class="r">OT</th>
+              <th class="r">สุทธิ</th>
+              <th class="r">%</th>
+            </tr>
+          </thead>
+          <tbody id="dept-tbody"></tbody>
+        </table>
+      </div>
+      <!-- breakdown -->
+      <div class="card">
+        <div class="card-title">สัดส่วนค่าใช้จ่าย</div>
+        <div id="bk-rows"></div>
+        <div class="bk-total-row">
+          <span class="bk-total-label">ยอดสุทธิ</span>
+          <span class="bk-total-val" id="bk-total">฿0</span>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="tn-tabs">
-    <button class="tn-tab act" onclick="switchTab('overview',this)">◆ ภาพรวม</button>
-    <button class="tn-tab" onclick="switchTab('employee',this)">👥 พนักงาน</button>
-    <button class="tn-tab" onclick="switchTab('report',this)">≋ รายงาน</button>
-  </div>
-  <div class="tn-right">
-    <div class="period-btn">
-      <select id="selMonth" onchange="recalc()">
-        <option value="3">มี.ค.</option><option value="2">ก.พ.</option>
-        <option value="1">ม.ค.</option><option value="12">ธ.ค.</option>
-      </select>
-      ▾
+
+  <!-- ══════ EMPLOYEE PAGE ══════ -->
+  <div class="page" id="page-employee">
+    <div class="emp-toolbar">
+      <div class="emp-search"><span style="color:var(--muted2)">🔍</span><input type="text" id="empSearch"
+          placeholder="ค้นหาพนักงาน..." oninput="renderEmpTable()" /></div>
+      <div class="dept-pills">
+        <button class="dpill act" onclick="deptFilter('ทั้งหมด',this)">ทั้งหมด</button>
+        <button class="dpill" onclick="deptFilter('คนขับรถ',this)">คนขับรถ</button>
+        <button class="dpill" onclick="deptFilter('คลังสินค้า',this)">คลังสินค้า</button>
+        <button class="dpill" onclick="deptFilter('ปฏิบัติการ',this)">ปฏิบัติการ</button>
+        <button class="dpill" onclick="deptFilter('การเงิน',this)">การเงิน</button>
+      </div>
+      <button class="btn-add" onclick="openAdd()">+ เพิ่มพนักงาน</button>
     </div>
-    <div class="period-btn">
-      <select id="selYear" onchange="recalc()">
-        <option value="2569">2569</option><option value="2568">2568</option>
-      </select>
-      ▾
-    </div>
-    <button class="btn-approve" onclick="approveAll()">✓ อนุมัติจ่ายเงิน</button>
-  </div>
-</nav>
-
-<!-- ══════ OVERVIEW PAGE ══════ -->
-<div class="page act" id="page-overview">
-  <div class="pg-title">ภาพรวม Payroll</div>
-  <div class="pg-sub" id="ov-sub">มี.ค. 2569 · 19 พนักงาน</div>
-
-  <div class="stat-cards">
-    <div class="sc"><div class="sc-icon">💳</div><div class="sc-label">ยอดจ่ายสุทธิ</div><div class="sc-val blue" id="sc-net">฿0</div><div class="sc-sub" id="sc-count">0 คน</div></div>
-    <div class="sc"><div class="sc-icon">💰</div><div class="sc-label">เงินเดือนรวม</div><div class="sc-val teal" id="sc-base">฿0</div><div class="sc-sub">ฐานเงินเดือน</div></div>
-    <div class="sc"><div class="sc-icon">⏱</div><div class="sc-label">OT รวม</div><div class="sc-val orange" id="sc-ot">฿0</div><div class="sc-sub">ค่าล่วงเวลา</div></div>
-    <div class="sc"><div class="sc-icon">✂️</div><div class="sc-label">หักมาสายรวม</div><div class="sc-val red" id="sc-late">฿0</div><div class="sc-sub">หักตามจำนวนวัน</div></div>
-    <div class="sc"><div class="sc-icon">👥</div><div class="sc-label">พนักงานทั้งหมด</div><div class="sc-val purple" id="sc-emp">0</div><div class="sc-sub">คนในระบบ</div></div>
-  </div>
-
-  <div class="ov-grid">
-    <!-- dept summary -->
-    <div class="card">
-      <div class="card-title">สรุปรายแผนก</div>
-      <table class="dept-table">
-        <thead><tr>
-          <th>แผนก</th><th class="r">คน</th>
-          <th class="r">เงินเดือน</th><th class="r">OT</th>
-          <th class="r">สุทธิ</th><th class="r">%</th>
-        </tr></thead>
-        <tbody id="dept-tbody"></tbody>
+    <div class="emp-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:55px;">รหัส</th>
+            <th>ชื่อ-นามสกุล</th>
+            <th>แผนก</th>
+            <th class="r">เงินเดือน</th>
+            <th class="r">OT</th>
+            <th class="r" style="color:var(--red);">มาสาย</th>
+            <th class="r">สุทธิ</th>
+            <th style="text-align:right;width:200px;">จัดการ</th>
+          </tr>
+        </thead>
+        <tbody id="emp-tbody"></tbody>
       </table>
     </div>
-    <!-- breakdown -->
-    <div class="card">
-      <div class="card-title">สัดส่วนค่าใช้จ่าย</div>
-      <div id="bk-rows"></div>
-      <div class="bk-total-row">
-        <span class="bk-total-label">ยอดสุทธิ</span>
-        <span class="bk-total-val" id="bk-total">฿0</span>
-      </div>
-    </div>
   </div>
-</div>
 
-<!-- ══════ EMPLOYEE PAGE ══════ -->
-<div class="page" id="page-employee">
-  <div class="emp-toolbar">
-    <div class="emp-search"><span style="color:var(--muted2)">🔍</span><input type="text" id="empSearch" placeholder="ค้นหาพนักงาน..." oninput="renderEmpTable()"/></div>
-    <div class="dept-pills">
-      <button class="dpill act" onclick="deptFilter('ทั้งหมด',this)">ทั้งหมด</button>
-      <button class="dpill" onclick="deptFilter('คนขับรถ',this)">คนขับรถ</button>
-      <button class="dpill" onclick="deptFilter('คลังสินค้า',this)">คลังสินค้า</button>
-      <button class="dpill" onclick="deptFilter('ปฏิบัติการ',this)">ปฏิบัติการ</button>
-      <button class="dpill" onclick="deptFilter('การเงิน',this)">การเงิน</button>
-    </div>
-    <button class="btn-add" onclick="openAdd()">+ เพิ่มพนักงาน</button>
-  </div>
-  <div class="emp-table-wrap">
-    <table>
-      <thead><tr>
-        <th style="width:55px;">รหัส</th>
-        <th>ชื่อ-นามสกุล</th>
-        <th>แผนก</th>
-        <th class="r">เงินเดือน</th>
-        <th class="r">OT</th>
-        <th class="r" style="color:var(--red);">มาสาย</th>
-        <th class="r">สุทธิ</th>
-        <th style="text-align:right;width:200px;">จัดการ</th>
-      </tr></thead>
-      <tbody id="emp-tbody"></tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ══════ REPORT PAGE ══════ -->
-<div class="page" id="page-report">
-  <div class="pg-title">รายงาน Payroll</div>
-  <div class="pg-sub">สรุปข้อมูลเงินเดือนประจำเดือน</div>
-  <div class="report-grid">
-    <div class="report-card">
-      <div class="card-title">📊 สรุปภาพรวม</div>
-      <table class="dept-table" id="report-summary-table"></table>
-      <div class="export-row">
-        <button class="exp-btn" onclick="toast('📥','ส่งออก Excel แล้ว')">📥 Excel</button>
-        <button class="exp-btn" onclick="toast('📄','ส่งออก PDF แล้ว')">📄 PDF</button>
-        <button class="exp-btn" onclick="toast('🖨️','กำลังพิมพ์...')">🖨️ พิมพ์</button>
-      </div>
-    </div>
-    <div class="report-card">
-      <div class="card-title">📋 รายการพนักงาน</div>
-      <table class="dept-table" id="report-emp-table"></table>
-    </div>
-  </div>
-</div>
-
-<!-- ══════ SLIP OVERLAY ══════ -->
-<div class="overlay" id="slipOverlay" onclick="closeOv('slipOverlay',event)">
-  <div class="slip-modal">
-    <div class="slip-hd">
-      <span class="slip-hd-title">สลิปเงินเดือน</span>
-      <div class="slip-hd-x" onclick="closeModal('slipOverlay')">✕</div>
-    </div>
-    <div class="slip-body">
-      <div class="slip-info-grid">
-        <div class="sig"><div class="sig-label">รหัส</div><div class="sig-val" id="sl-id">—</div></div>
-        <div class="sig"><div class="sig-label">ชื่อ</div><div class="sig-val" id="sl-name">—</div></div>
-        <div class="sig"><div class="sig-label">แผนก</div><div class="sig-val" id="sl-dept">—</div></div>
-        <div class="sig"><div class="sig-label">ตำแหน่ง</div><div class="sig-val" id="sl-pos">—</div></div>
-      </div>
-      <div class="slip-section-label">รายได้</div>
-      <div class="slip-line"><span class="sl-name">เงินเดือน</span><span class="sl-val green" id="sl-base">—</span></div>
-      <div class="slip-line"><span class="sl-name">OT</span><span class="sl-val green" id="sl-ot">—</span></div>
-      <div class="slip-subtotal">
-        <span class="lbl">รวมรายได้</span>
-        <span class="val green" id="sl-income-total">—</span>
-      </div>
-      <div class="slip-section-label red">รายการหัก</div>
-      <div class="slip-line"><span class="sl-name">หักมาสาย</span><span class="sl-val red" id="sl-late">—</span></div>
-      <div class="slip-subtotal">
-        <span class="lbl">รวมหัก</span>
-        <span class="val red" id="sl-deduct-total">—</span>
-      </div>
-      <div class="slip-net">
-        <span class="slip-net-label">เงินได้สุทธิ</span>
-        <span class="slip-net-val" id="sl-net">—</span>
-      </div>
-      <div class="slip-actions">
-        <button class="btn-close" onclick="closeModal('slipOverlay')">ปิด</button>
-        <button class="btn-print" onclick="toast('🖨️','พิมพ์สลิป '+currentSlipId);closeModal('slipOverlay')">🖨️ พิมพ์สลิป</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════ ADD/EDIT OVERLAY ══════ -->
-<div class="overlay" id="addOverlay" onclick="closeOv('addOverlay',event)">
-  <div class="add-modal">
-    <div class="add-hd">
-      <span class="add-hd-title" id="addModalTitle">+ เพิ่มพนักงาน</span>
-      <div class="slip-hd-x" onclick="closeModal('addOverlay')">✕</div>
-    </div>
-    <div class="add-body">
-      <div class="form-row2">
-        <div class="fg"><label class="fl">รหัสพนักงาน</label><input class="fi" id="f-code" placeholder="E001"/></div>
-        <div class="fg"><label class="fl">ชื่อ-นามสกุล</label><input class="fi" id="f-name" placeholder="นาย..."/></div>
-      </div>
-      <div class="form-row2">
-        <div class="fg"><label class="fl">แผนก</label>
-          <select class="fs" id="f-dept">
-            <option>คนขับรถ</option><option>คลังสินค้า</option><option>ปฏิบัติการ</option><option>การเงิน</option>
-          </select>
+  <!-- ══════ REPORT PAGE ══════ -->
+  <div class="page" id="page-report">
+    <div class="pg-title">รายงาน Payroll</div>
+    <div class="pg-sub">สรุปข้อมูลเงินเดือนประจำเดือน</div>
+    <div class="report-grid">
+      <div class="report-card">
+        <div class="card-title">📊 สรุปภาพรวม</div>
+        <table class="dept-table" id="report-summary-table"></table>
+        <div class="export-row">
+          <button class="exp-btn" onclick="toast('📥','ส่งออก Excel แล้ว')">📥 Excel</button>
+          <button class="exp-btn" onclick="toast('📄','ส่งออก PDF แล้ว')">📄 PDF</button>
+          <button class="exp-btn" onclick="toast('🖨️','กำลังพิมพ์...')">🖨️ พิมพ์</button>
         </div>
-        <div class="fg"><label class="fl">ตำแหน่ง</label><input class="fi" id="f-pos" placeholder="พนักงาน..."/></div>
       </div>
-      <div class="form-row2">
-        <div class="fg"><label class="fl">เงินเดือนฐาน (฿)</label><input class="fi" id="f-base" type="number" placeholder="18000"/></div>
-        <div class="fg"><label class="fl">OT ชั่วโมง</label><input class="fi" id="f-ot-hrs" type="number" placeholder="0" min="0"/></div>
-      </div>
-      <div class="form-row2">
-        <div class="fg"><label class="fl">อัตรา OT ต่อชั่วโมง (฿)</label><input class="fi" id="f-ot-rate" type="number" placeholder="100" min="0"/></div>
-        <div class="fg"><label class="fl">จำนวนวันมาสาย</label><input class="fi" id="f-late" type="number" placeholder="0" min="0"/></div>
-      </div>
-      <div class="add-actions">
-        <button class="btn-close" onclick="closeModal('addOverlay')">ยกเลิก</button>
-        <button class="btn-save" id="addSaveBtn" onclick="saveEmployee()">💾 บันทึก</button>
+      <div class="report-card">
+        <div class="card-title">📋 รายการพนักงาน</div>
+        <table class="dept-table" id="report-emp-table"></table>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ══════ CONFIRM OVERLAY ══════ -->
-<div class="overlay" id="confirmOverlay">
-  <div class="confirm-box">
-    <div class="confirm-title">⚠️ ยืนยันการลบ</div>
-    <div class="confirm-msg" id="confirmMsg">ลบพนักงานนี้ออกจากระบบ?</div>
-    <div class="confirm-btns">
-      <button class="btn-ccancel" onclick="closeModal('confirmOverlay')">ยกเลิก</button>
-      <button class="btn-cdel" id="confirmDelBtn">ลบเลย</button>
+  <!-- ══════ SLIP OVERLAY ══════ -->
+  <div class="overlay" id="slipOverlay" onclick="closeOv('slipOverlay',event)">
+    <div class="slip-modal">
+      <div class="slip-hd">
+        <span class="slip-hd-title">สลิปเงินเดือน</span>
+        <div class="slip-hd-x" onclick="closeModal('slipOverlay')">✕</div>
+      </div>
+      <div class="slip-body">
+        <div class="slip-info-grid">
+          <div class="sig">
+            <div class="sig-label">รหัส</div>
+            <div class="sig-val" id="sl-id">—</div>
+          </div>
+          <div class="sig">
+            <div class="sig-label">ชื่อ</div>
+            <div class="sig-val" id="sl-name">—</div>
+          </div>
+          <div class="sig">
+            <div class="sig-label">แผนก</div>
+            <div class="sig-val" id="sl-dept">—</div>
+          </div>
+          <div class="sig">
+            <div class="sig-label">ตำแหน่ง</div>
+            <div class="sig-val" id="sl-pos">—</div>
+          </div>
+        </div>
+        <div class="slip-section-label">รายได้</div>
+        <div class="slip-line"><span class="sl-name">เงินเดือน</span><span class="sl-val green" id="sl-base">—</span>
+        </div>
+        <div class="slip-line"><span class="sl-name">OT</span><span class="sl-val green" id="sl-ot">—</span></div>
+        <div class="slip-subtotal">
+          <span class="lbl">รวมรายได้</span>
+          <span class="val green" id="sl-income-total">—</span>
+        </div>
+        <div class="slip-section-label red">รายการหัก</div>
+        <div class="slip-line"><span class="sl-name">หักมาสาย</span><span class="sl-val red" id="sl-late">—</span></div>
+        <div class="slip-subtotal">
+          <span class="lbl">รวมหัก</span>
+          <span class="val red" id="sl-deduct-total">—</span>
+        </div>
+        <div class="slip-net">
+          <span class="slip-net-label">เงินได้สุทธิ</span>
+          <span class="slip-net-val" id="sl-net">—</span>
+        </div>
+        <div class="slip-actions">
+          <button class="btn-close" onclick="closeModal('slipOverlay')">ปิด</button>
+          <button class="btn-print" onclick="toast('🖨️','พิมพ์สลิป '+currentSlipId);closeModal('slipOverlay')">🖨️
+            พิมพ์สลิป</button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ══════ TOAST ══════ -->
-<div class="toast" id="toast"><span id="t-icon">✅</span>&nbsp;<span id="t-msg">—</span></div>
-<script src="payroll.js"></script>
+  <!-- ══════ ADD/EDIT OVERLAY ══════ -->
+  <div class="overlay" id="addOverlay" onclick="closeOv('addOverlay',event)">
+    <div class="add-modal">
+      <div class="add-hd">
+        <span class="add-hd-title" id="addModalTitle">+ เพิ่มพนักงาน</span>
+        <div class="slip-hd-x" onclick="closeModal('addOverlay')">✕</div>
+      </div>
+      <div class="add-body">
+        <div class="form-row2">
+          <div class="fg"><label class="fl">รหัสพนักงาน</label><input class="fi" id="f-code" placeholder="E001" /></div>
+          <div class="fg"><label class="fl">ชื่อ-นามสกุล</label><input class="fi" id="f-name" placeholder="นาย..." />
+          </div>
+        </div>
+        <div class="form-row2">
+          <div class="fg"><label class="fl">แผนก</label>
+            <select class="fs" id="f-dept">
+              <option>คนขับรถ</option>
+              <option>คลังสินค้า</option>
+              <option>ปฏิบัติการ</option>
+              <option>การเงิน</option>
+            </select>
+          </div>
+          <div class="fg"><label class="fl">ตำแหน่ง</label><input class="fi" id="f-pos" placeholder="พนักงาน..." />
+          </div>
+        </div>
+        <div class="form-row2">
+          <div class="fg"><label class="fl">เงินเดือนฐาน (฿)</label><input class="fi" id="f-base" type="number"
+              placeholder="18000" /></div>
+          <div class="fg"><label class="fl">OT ชั่วโมง</label><input class="fi" id="f-ot-hrs" type="number"
+              placeholder="0" min="0" /></div>
+        </div>
+        <div class="form-row2">
+          <div class="fg"><label class="fl">อัตรา OT ต่อชั่วโมง (฿)</label><input class="fi" id="f-ot-rate"
+              type="number" placeholder="100" min="0" /></div>
+          <div class="fg"><label class="fl">จำนวนวันมาสาย</label><input class="fi" id="f-late" type="number"
+              placeholder="0" min="0" /></div>
+        </div>
+        <div class="add-actions">
+          <button class="btn-close" onclick="closeModal('addOverlay')">ยกเลิก</button>
+          <button class="btn-save" id="addSaveBtn" onclick="saveEmployee()">💾 บันทึก</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ CONFIRM OVERLAY ══════ -->
+  <div class="overlay" id="confirmOverlay">
+    <div class="confirm-box">
+      <div class="confirm-title">⚠️ ยืนยันการลบ</div>
+      <div class="confirm-msg" id="confirmMsg">ลบพนักงานนี้ออกจากระบบ?</div>
+      <div class="confirm-btns">
+        <button class="btn-ccancel" onclick="closeModal('confirmOverlay')">ยกเลิก</button>
+        <button class="btn-cdel" id="confirmDelBtn">ลบเลย</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ TOAST ══════ -->
+  <div class="toast" id="toast"><span id="t-icon">✅</span>&nbsp;<span id="t-msg">—</span></div>
+  <script src="payroll.js"></script>
 </body>
+
 </html>
