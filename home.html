@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Go Express — บริษัทขนส่งชั้นนำ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700;900&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="home.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="showPage('home')"><span>Go</span> Express</div>
+  <ul>
+    <li><a onclick="showPage('home')" id="nav-home" class="active">หน้าแรก</a></li>
+    <li><a onclick="showPage('services')" id="nav-services">บริการ</a></li>
+    <li><a onclick="showPage('tracking')" id="nav-tracking">ติดตามพัสดุ</a></li>
+    <li><a onclick="showPage('about')" id="nav-about">เกี่ยวกับเรา</a></li>
+    <li><a onclick="showPage('contact')" id="nav-contact">ติดต่อ</a></li>
+  </ul>
+ <div class="nav-right">
+    <div class="nav-avatar" id="nav-avatar"></div>
+    <span class="nav-uname" id="nav-uname"></span>
+    <button class="nav-logout" id="nav-logout" onclick="doLogout()">ออกจากระบบ</button>
+    <div class="nav-dropdown">
+  <button class="nav-login-btn" onclick="toggleDropdown()">
+    เข้าสู่ระบบ ▾
+  </button>
+
+  <div class="dropdown-menu" id="loginDropdown">
+    <a href="crm/crm.html">CRM</a>
+    <a href="payroll/payroll.html">Payroll</a>
+    <a href="pms/pms.html">PMS</a>
+  </div>
+</div>
+    <button class="nav-cta"><a href="../homepage/homepage.html">Program</a></button>
+  </div>
+</nav>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="auth-modal" onclick="handleOverlayClick(event)">
+  <div class="auth-modal">
+    <div class="auth-rainbow"></div>
+    <div class="auth-body">
+      <button class="auth-close" onclick="closeAuth()">✕</button>
+      <div class="auth-logo-txt"><span>Go</span> Express</div>
+      <div class="auth-greet">ยินดีต้อนรับ 👋</div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">เข้าสู่ระบบ</button>
+        <button class="auth-tab" id="tab-register" onclick="switchTab('register')">สมัครสมาชิก</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div class="auth-form active" id="form-login">
+        <div class="afield">
+          <label class="alabel">ชื่อผู้ใช้</label>
+          <div class="ainput-w">
+            <input class="ainput" id="login-name" type="text" placeholder="manager"/>
+            <span class="ainput-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+          </div>
+        </div>
+        <div class="afield">
+          <label class="alabel">รหัสผ่าน</label>
+          <div class="ainput-w">
+            <input class="ainput" id="login-pass" type="password" placeholder="••••••••"/>
+            <button class="ainput-eye" onclick="togglePwd('login-pass',this)" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+        </div>
+        <div class="arow">
+          <label class="acheck"><input type="checkbox"/> จดจำฉันไว้</label>
+          <button class="aforgot">ลืมรหัสผ่าน?</button>
+        </div>
+        <button class="asubmit" onclick="doLogin()">เข้าสู่ระบบ</button>
+        <div class="adivider">หรือเข้าสู่ระบบด้วย</div>
+        <div class="asocials">
+          <button class="asocial">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Google
+          </button>
+          <button class="asocial">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            Facebook
+          </button>
+        </div>
+        <div class="aswitch">ยังไม่มีบัญชี? <span onclick="switchTab('register')">สมัครสมาชิกฟรี</span></div>
+      </div>
+
+      <!-- REGISTER -->
+      <div class="auth-form" id="form-register">
+        <div class="a2col">
+          <div class="afield"><label class="alabel">ชื่อ</label><input class="ainput" id="reg-fname" type="text" placeholder="ชื่อ"/></div>
+          <div class="afield"><label class="alabel">นามสกุล</label><input class="ainput" type="text" placeholder="นามสกุล"/></div>
+        </div>
+        <div class="afield">
+          <label class="alabel">อีเมล</label>
+          <div class="ainput-w">
+            <input class="ainput" type="email" placeholder="example@email.com"/>
+            <span class="ainput-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+          </div>
+        </div>
+        <div class="afield">
+          <label class="alabel">เบอร์โทรศัพท์</label>
+          <div class="ainput-w">
+            <input class="ainput" type="tel" placeholder="0XX-XXX-XXXX"/>
+            <span class="ainput-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.89 9.11 19.79 19.79 0 01.82 4a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 9.91a16 16 0 006 6l.97-.97a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></span>
+          </div>
+        </div>
+        <div class="afield">
+          <label class="alabel">รหัสผ่าน</label>
+          <div class="ainput-w">
+            <input class="ainput" id="reg-pass" type="password" placeholder="อย่างน้อย 8 ตัวอักษร"/>
+            <button class="ainput-eye" onclick="togglePwd('reg-pass',this)" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+        </div>
+        <label class="aterms"><input type="checkbox"/> ฉันยอมรับ <a href="#">ข้อกำหนดการใช้งาน</a> และ <a href="#">นโยบายความเป็นส่วนตัว</a></label>
+        <button class="asubmit" onclick="doRegister()">สมัครสมาชิก</button>
+        <div class="aswitch">มีบัญชีแล้ว? <span onclick="switchTab('login')">เข้าสู่ระบบ</span></div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="auth-success" id="auth-success">
+        <div class="asuc-icon">🎉</div>
+        <h3 id="suc-title">เข้าสู่ระบบสำเร็จ!</h3>
+        <p id="suc-msg">ยินดีต้อนรับ กำลังนำคุณเข้าสู่ระบบ...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</nav>
+
+<!-- ═══ PAGE: HOME ═══ -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-grid-bg"></div>
+
+    <div class="hero-text">
+      <div class="hero-badge">✦ ให้บริการทั่วประเทศไทย</div>
+      <h1 class="hero-h1">ขนส่งเร็ว<br><span class="line-accent">ส่งถึงมือ</span><br>ทุกที่ทั่วไทย</h1>
+      <p class="hero-desc">GoExpress บริษัทขนส่งชั้นนำ ที่คุณวางใจได้ ส่งพัสดุทั้งในกรุงเทพฯ และต่างจังหวัดทุกพื้นที่ ด้วยระบบติดตามสินค้าแบบ Real-Time</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="showPage('services')">ดูบริการของเรา →</button>
+        <button class="btn-ghost" onclick="showPage('tracking')">📦 ติดตามพัสดุ</button>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="truck-card">
+        <svg class="truck-svg" viewBox="0 0 400 200" fill="none">
+          <rect x="0" y="165" width="400" height="4" rx="2" fill="#1e2430"/>
+          <rect x="30" y="168" width="40" height="3" rx="1.5" fill="#f97316" opacity="0.4"/>
+          <rect x="130" y="168" width="40" height="3" rx="1.5" fill="#f97316" opacity="0.4"/>
+          <rect x="230" y="168" width="40" height="3" rx="1.5" fill="#f97316" opacity="0.4"/>
+          <rect x="330" y="168" width="40" height="3" rx="1.5" fill="#f97316" opacity="0.4"/>
+          <rect x="60" y="95" width="200" height="70" rx="6" fill="#1a2030" stroke="#2d3748" stroke-width="1.5"/>
+          <rect x="75" y="108" width="170" height="44" rx="4" fill="#111827"/>
+          <text x="160" y="135" text-anchor="middle" fill="#f97316" font-family="Kanit,sans-serif" font-weight="800" font-size="13">GoExpress</text>
+          <rect x="60" y="150" width="200" height="8" fill="#f97316" opacity="0.12"/>
+          <path d="M260 115 L300 115 L320 130 L320 165 L260 165 Z" fill="#1a2030" stroke="#2d3748" stroke-width="1.5"/>
+          <path d="M263 118 L295 118 L312 130 L312 163 L263 163 Z" fill="#111827"/>
+          <path d="M267 121 L290 121 L305 131 L305 148 L267 148 Z" fill="#1e3a5f" stroke="#2d4a6f" stroke-width="1"/>
+          <rect x="315" y="145" width="12" height="7" rx="3" fill="#fbbf24" opacity="0.9"/>
+          <circle cx="105" cy="165" r="18" fill="#111" stroke="#2d3748" stroke-width="2"/>
+          <circle cx="105" cy="165" r="10" fill="#1a2030" stroke="#374151" stroke-width="1.5"/>
+          <circle cx="105" cy="165" r="4" fill="#f97316"/>
+          <circle cx="195" cy="165" r="18" fill="#111" stroke="#2d3748" stroke-width="2"/>
+          <circle cx="195" cy="165" r="10" fill="#1a2030" stroke="#374151" stroke-width="1.5"/>
+          <circle cx="195" cy="165" r="4" fill="#f97316"/>
+          <circle cx="288" cy="165" r="18" fill="#111" stroke="#2d3748" stroke-width="2"/>
+          <circle cx="288" cy="165" r="10" fill="#1a2030" stroke="#374151" stroke-width="1.5"/>
+          <circle cx="288" cy="165" r="4" fill="#f97316"/>
+          <line x1="20" y1="125" x2="55" y2="125" stroke="#f97316" stroke-width="2" opacity="0.6" stroke-dasharray="4 4"/>
+          <line x1="10" y1="135" x2="55" y2="135" stroke="#f97316" stroke-width="1.5" opacity="0.4" stroke-dasharray="6 4"/>
+        </svg>
+        <div class="truck-card-stats">
+          <div class="stat"><div class="stat-num">98%</div><div class="stat-label">ส่งตรงเวลา</div></div>
+          <div class="stat"><div class="stat-num">24h</div><div class="stat-label">ส่งด่วน</div></div>
+          <div class="stat"><div class="stat-num">77</div><div class="stat-label">จังหวัด</div></div>
+        </div>
+      </div>
+      <div class="badge-float badge-1">🚀 ส่งด่วนภายใน 24 ชั่วโมง</div>
+      <div class="badge-float badge-2">📍 Real-Time Tracking</div>
+    </div>
+  </section>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">ส่งด่วนทั่วประเทศ</span><span class="marquee-item">ขนส่งสินค้าขนาดใหญ่</span><span class="marquee-item">โลจิสติกส์ครบวงจร</span>
+      <span class="marquee-item">ติดตามพัสดุ Real-Time</span><span class="marquee-item">ประกันสินค้าทุกชิ้น</span><span class="marquee-item">บริการ 24/7</span>
+      <span class="marquee-item">ส่งด่วนทั่วประเทศ</span><span class="marquee-item">ขนส่งสินค้าขนาดใหญ่</span><span class="marquee-item">โลจิสติกส์ครบวงจร</span>
+      <span class="marquee-item">ติดตามพัสดุ Real-Time</span><span class="marquee-item">ประกันสินค้าทุกชิ้น</span><span class="marquee-item">บริการ 24/7</span>
+    </div>
+  </div>
+
+  <div class="track-bar">
+    <div class="track-inner">
+      <h2>📦 ติดตามสถานะพัสดุของคุณ</h2>
+      <div class="track-form">
+        <input class="track-input" id="home-track-input" type="text" placeholder="กรอกหมายเลขพัสดุ เช่น SW2024001234" />
+        <button class="track-btn" onclick="homeTrack()">ค้นหา</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="home-section">
+    <div class="section-label">● บริการของเรา</div>
+    <h2 class="section-title">ครบทุกความต้องการ<br>ด้านการขนส่ง</h2>
+    <p class="section-desc">เราให้บริการขนส่งที่หลากหลาย ตอบโจทย์ทั้งลูกค้าบุคคลและองค์กรธุรกิจ</p>
+    <div class="services-grid">
+      <div class="service-card" onclick="showPage('services')"><div class="service-arrow">→</div><div class="service-icon">🚀</div><h3>ส่งด่วน Express</h3><p>ส่งถึงมือผู้รับภายใน 24 ชั่วโมง สำหรับพื้นที่กรุงเทพฯ และปริมณฑล</p></div>
+      <div class="service-card" onclick="showPage('services')"><div class="service-arrow">→</div><div class="service-icon">🗺️</div><h3>ส่งทั่วประเทศ</h3><p>ครอบคลุมทั้ง 77 จังหวัดทั่วไทย ส่งถึงบ้านปลายทาง 1-3 วันทำการ</p></div>
+      <div class="service-card" onclick="showPage('services')"><div class="service-arrow">→</div><div class="service-icon">🏭</div><h3>ขนส่งอุตสาหกรรม</h3><p>บริการขนส่งสินค้าขนาดใหญ่และน้ำหนักมาก ด้วยรถบรรทุกหลากหลายประเภท</p></div>
+      <div class="service-card" onclick="showPage('services')"><div class="service-arrow">→</div><div class="service-icon">❄️</div><h3>Cold Chain</h3><p>ขนส่งสินค้าที่ต้องการอุณหภูมิควบคุม อาหารสด และเภสัชภัณฑ์</p></div>
+      <div class="service-card" onclick="showPage('services')"><div class="service-arrow">→</div><div class="service-icon">📦</div><h3>คลังสินค้า & Fulfillment</h3><p>บริการเก็บ แพ็ค และส่งสินค้าครบวงจร เหมาะสำหรับ e-Commerce</p></div>
+    </div>
+  </section>
+
+  <section class="home-section" style="padding-top:0;">
+    <div class="stats-row">
+      <div class="stats-item"><div class="stats-num">2M+</div><div class="stats-label">พัสดุที่ส่งสำเร็จ</div></div>
+      <div class="stats-item"><div class="stats-num">50K+</div><div class="stats-label">ลูกค้าที่ไว้วางใจ</div></div>
+      <div class="stats-item"><div class="stats-num">98%</div><div class="stats-label">ส่งตรงเวลา</div></div>
+      <div class="stats-item"><div class="stats-num">15+</div><div class="stats-label">ปีประสบการณ์</div></div>
+    </div>
+  </section>
+
+  <section class="why-section">
+    <div class="why-grid">
+      <div>
+        <div class="section-label">● ทำไมต้องเลือกเรา</div>
+        <h2 class="section-title">เชื่อถือได้<br>ทุกการขนส่ง</h2>
+        <div class="why-list">
+          <div class="why-item"><div class="why-num">01</div><div><h4>ระบบ GPS ติดตามแบบ Real-Time</h4><p>ติดตามสินค้าของคุณได้ทุกที่ ทุกเวลา ผ่านแอปพลิเคชันและเว็บไซต์</p></div></div>
+          <div class="why-item"><div class="why-num">02</div><div><h4>ประกันสินค้าทุกชิ้น</h4><p>สินค้าทุกชิ้นได้รับการคุ้มครองประกัน หากเกิดความเสียหายเราพร้อมรับผิดชอบ</p></div></div>
+          <div class="why-item"><div class="why-num">03</div><div><h4>ทีมงานมืออาชีพ 24/7</h4><p>ทีมซัพพอร์ตพร้อมช่วยเหลือตลอด 24 ชั่วโมง ทุกช่องทาง</p></div></div>
+          <div class="why-item"><div class="why-num">04</div><div><h4>ราคาโปร่งใส ไม่มีค่าใช้จ่ายซ่อนเร้น</h4><p>ราคาชัดเจน คำนวณได้ก่อนส่ง พร้อมใบเสร็จดิจิทัลทุกครั้ง</p></div></div>
+        </div>
+      </div>
+      <div class="why-image-wrap">
+        <div class="coverage-map">
+          <div class="section-label" style="margin-bottom:0.4rem;">● พื้นที่ให้บริการ</div>
+          <svg class="map-svg" viewBox="0 0 200 320" fill="none">
+            <path d="M85 10 L105 10 L120 25 L125 45 L115 60 L125 75 L130 100 L120 120 L130 140 L125 165 L115 180 L120 200 L110 220 L105 240 L95 250 L90 240 L85 220 L75 200 L80 180 L70 165 L65 140 L75 120 L65 100 L70 75 L80 60 L70 45 L75 25 Z" fill="#1a2030" stroke="#f97316" stroke-width="1.5"/>
+            <path d="M90 250 L95 250 L98 270 L93 290 L88 305 L85 310 L82 305 L80 290 L83 270 L87 255 Z" fill="#1a2030" stroke="#f97316" stroke-width="1.5"/>
+            <circle cx="95" cy="175" r="5" fill="#f97316"/><circle cx="95" cy="175" r="11" fill="#f97316" opacity="0.15"/>
+            <text x="108" y="179" fill="#f97316" font-family="Kanit" font-size="8" font-weight="700">กรุงเทพฯ</text>
+            <circle cx="90" cy="50" r="3" fill="#fb923c" opacity="0.7"/>
+            <circle cx="115" cy="90" r="3" fill="#fb923c" opacity="0.7"/>
+            <circle cx="72" cy="130" r="3" fill="#fb923c" opacity="0.7"/>
+            <circle cx="88" cy="280" r="3" fill="#fb923c" opacity="0.7"/>
+            <line x1="90" y1="50" x2="95" y2="175" stroke="#f97316" stroke-width="0.8" stroke-dasharray="4 3" opacity="0.3"/>
+            <line x1="115" y1="90" x2="95" y2="175" stroke="#f97316" stroke-width="0.8" stroke-dasharray="4 3" opacity="0.3"/>
+            <line x1="72" y1="130" x2="95" y2="175" stroke="#f97316" stroke-width="0.8" stroke-dasharray="4 3" opacity="0.3"/>
+            <line x1="95" y1="175" x2="88" y2="280" stroke="#f97316" stroke-width="0.8" stroke-dasharray="4 3" opacity="0.3"/>
+          </svg>
+          <div style="text-align:center;color:var(--muted);font-size:0.76rem;">ครอบคลุม 77 จังหวัดทั่วไทย</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="section-label">● รีวิวจากลูกค้า</div>
+    <h2 class="section-title">ลูกค้าพูดถึงเรา</h2>
+    <div class="test-grid">
+      <div class="test-card"><div class="stars">★★★★★</div><p>ใช้บริการมาหลายปีแล้ว ส่งเร็ว พัสดุไม่เสียหาย ระบบติดตามใช้งานง่ายมาก แนะนำเลยครับ</p><div class="test-author"><div class="avatar">ส</div><div><div class="author-name">สมชาย วงศ์เจริญ</div><div class="author-role">เจ้าของร้านค้าออนไลน์</div></div></div></div>
+      <div class="test-card"><div class="stars">★★★★★</div><p>บริการ Cold Chain ดีเยี่ยม สินค้าอาหารแช่แข็งถึงมือลูกค้าอย่างสมบูรณ์ทุกครั้ง ไว้ใจได้มาก</p><div class="test-author"><div class="avatar" style="background:linear-gradient(135deg,#f97316,#ef4444)">น</div><div><div class="author-name">นภาพร ศรีสมบัติ</div><div class="author-role">ผู้จัดการฝ่ายโลจิสติกส์</div></div></div></div>
+      <div class="test-card"><div class="stars">★★★★★</div><p>ราคาโปร่งใส ไม่มีบวกเพิ่ม ทีมงาน Fulfillment ช่วยแพ็คของได้เนี้ยบมาก ลูกค้าชมตลอด</p><div class="test-author"><div class="avatar" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)">ว</div><div><div class="author-name">วิชาญ ทองดี</div><div class="author-role">CEO, WD Commerce</div></div></div></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span>Go</span> Express</div>
+        <p>บริษัทขนส่งชั้นนำของไทย ให้บริการครบวงจรทั้งในและต่างประเทศ ด้วยประสบการณ์กว่า 15 ปี</p>
+        <div style="margin-top:1rem;display:flex;flex-direction:column;gap:0.45rem;">
+          <span style="color:var(--muted);font-size:0.83rem;">📞 02-XXX-XXXX</span>
+          <span style="color:var(--muted);font-size:0.83rem;">✉️ info@goexpress.th</span>
+          <span style="color:var(--muted);font-size:0.83rem;">📍 123 ถนนสุขุมวิท กรุงเทพฯ 10110</span>
+        </div>
+      </div>
+      <div class="footer-col"><h5>บริการ</h5><ul><li><a onclick="showPage('services')">ส่งด่วน Express</a></li><li><a onclick="showPage('services')">ส่งทั่วประเทศ</a></li><li><a onclick="showPage('services')">Cold Chain</a></li><li><a onclick="showPage('services')">คลังสินค้า</a></li></ul></div>
+      <div class="footer-col"><h5>บริษัท</h5><ul><li><a onclick="showPage('about')">เกี่ยวกับเรา</a></li><li><a onclick="showPage('contact')">ติดต่อเรา</a></li><li><a href="#">ร่วมงานกับเรา</a></li><li><a href="#">พาร์ทเนอร์</a></li></ul></div>
+      <div class="footer-col"><h5>ช่วยเหลือ</h5><ul><li><a onclick="showPage('tracking')">ติดตามพัสดุ</a></li><li><a href="#">คำถามที่พบบ่อย</a></li><li><a href="#">นโยบายความเป็นส่วนตัว</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2024 Go Express Co., Ltd. All rights reserved.</span><div class="social-links"><span class="social-btn">f</span><span class="social-btn">ig</span><span class="social-btn">in</span><span class="social-btn">yt</span></div></div>
+  </footer>
+</div>
+
+<!-- ═══ PAGE: TRACKING ═══ -->
+<div class="page" id="page-tracking">
+  <div class="page-header">
+    <div class="breadcrumb"><span onclick="showPage('home')">หน้าแรก</span><span class="sep">/</span><span class="current">ติดตามพัสดุ</span></div>
+    <h1>📦 ติดตามพัสดุ</h1>
+    <p>กรอกหมายเลขพัสดุเพื่อดูสถานะการจัดส่งแบบ Real-Time</p>
+  </div>
+  <div class="tracking-page-content">
+    <div class="track-page-form">
+      <h3>🔍 ค้นหาพัสดุ</h3>
+      <div class="track-page-input-row">
+        <input class="tp-input" id="tracking-input" type="text" placeholder="กรอกหมายเลขพัสดุ เช่น SW2024001234" />
+        <button class="tp-btn" onclick="searchTracking()">ค้นหา</button>
+      </div>
+      <div class="sample-numbers">
+        <span class="sample-label">ลองตัวอย่าง:</span>
+        <span class="sample-chip" onclick="fillSample('SW2024001234')">SW2024001234</span>
+        <span class="sample-chip" onclick="fillSample('SW2024005678')">SW2024005678</span>
+        <span class="sample-chip" onclick="fillSample('SW2024009999')">SW2024009999</span>
+        <span class="sample-chip" onclick="fillSample('SW2024002024')">SW2024002024</span>
+      </div>
+    </div>
+    <div id="tracking-result"></div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: SERVICES ═══ -->
+<div class="page" id="page-services">
+  <div class="page-header">
+    <div class="breadcrumb"><span onclick="showPage('home')">หน้าแรก</span><span class="sep">/</span><span class="current">บริการของเรา</span></div>
+    <h1>บริการของเรา</h1>
+    <p>เราให้บริการขนส่งที่หลากหลาย ตอบโจทย์ทั้งลูกค้าบุคคลและองค์กรธุรกิจทุกขนาด</p>
+  </div>
+  <div class="services-page-content">
+    <div class="section-label">● บริการทั้งหมด</div>
+    <h2 class="section-title">ครบทุกความต้องการ<br>ด้านการขนส่ง</h2>
+    <div class="services-full-grid">
+      <div class="service-full-card">
+        <div class="service-icon">🚀</div>
+        <h3>ส่งด่วน Express</h3>
+        <p>บริการส่งพัสดุด่วนที่รวดเร็วที่สุด ส่งถึงมือผู้รับภายใน 24 ชั่วโมงสำหรับพื้นที่กรุงเทพฯ และปริมณฑล พร้อมแจ้งเตือนทุกขั้นตอนผ่าน SMS</p>
+        <ul class="service-features">
+          <li>ส่งถึงมือผู้รับใน 24 ชั่วโมง</li><li>แจ้งเตือน SMS ทุกขั้นตอน</li><li>ติดตาม Real-Time GPS</li><li>รับประกันตรงเวลา 98%</li>
+        </ul>
+        <div class="service-price"><div><div class="price-tag">เริ่มต้น ฿45</div><div class="price-unit">สำหรับน้ำหนักไม่เกิน 1 กก.</div></div><button class="btn-primary" style="padding:0.55rem 1.1rem;font-size:0.82rem;" onclick="showPage('contact')">สอบถาม</button></div>
+      </div>
+      <div class="service-full-card">
+        <div class="service-icon">🗺️</div>
+        <h3>ส่งทั่วประเทศ</h3>
+        <p>ครอบคลุมทั้ง 77 จังหวัดทั่วไทย ส่งถึงบ้านปลายทาง ด้วยระยะเวลา 1-3 วันทำการ เหมาะสำหรับสินค้าทั่วไปทุกประเภท</p>
+        <ul class="service-features">
+          <li>ครอบคลุม 77 จังหวัดทั่วไทย</li><li>ส่งถึงบ้าน ไม่ต้องมารับเอง</li><li>รับน้ำหนักสูงสุด 50 กก.</li><li>ติดตามสถานะออนไลน์</li>
+        </ul>
+        <div class="service-price"><div><div class="price-tag">เริ่มต้น ฿35</div><div class="price-unit">สำหรับน้ำหนักไม่เกิน 1 กก.</div></div><button class="btn-primary" style="padding:0.55rem 1.1rem;font-size:0.82rem;" onclick="showPage('contact')">สอบถาม</button></div>
+      </div>
+      <div class="service-full-card">
+        <div class="service-icon">🏭</div>
+        <h3>ขนส่งสินค้าอุตสาหกรรม</h3>
+        <p>บริการขนส่งสินค้าขนาดใหญ่และน้ำหนักมาก ด้วยรถบรรทุกที่หลากหลายประเภท รองรับสินค้าอุตสาหกรรมและโรงงาน</p>
+        <ul class="service-features">
+          <li>รถบรรทุก 4 และ 6 ล้อ</li><li>รับน้ำหนักสูงสุด 10 ตัน</li><li>ทีมขนส่งมืออาชีพ</li><li>ประกันสินค้าทุกชิ้น</li>
+        </ul>
+        <div class="service-price"><div><div class="price-tag">ราคาตามตกลง</div><div class="price-unit">ขึ้นอยู่กับระยะทางและน้ำหนัก</div></div><button class="btn-primary" style="padding:0.55rem 1.1rem;font-size:0.82rem;" onclick="showPage('contact')">ขอใบเสนอราคา</button></div>
+      </div>
+      <div class="service-full-card">
+        <div class="service-icon">❄️</div>
+        <h3>ห้องเย็น Cold Chain</h3>
+        <p>ขนส่งสินค้าที่ต้องการอุณหภูมิควบคุม ไม่ว่าจะเป็นอาหารสด เภสัชภัณฑ์ ผลิตภัณฑ์แช่แข็ง และวัคซีน</p>
+        <ul class="service-features">
+          <li>ควบคุมอุณหภูมิ 0-8°C และ -18°C</li><li>ติดตามอุณหภูมิ Real-Time</li><li>รถห้องเย็นมาตรฐาน FDA</li><li>พนักงานผ่านการอบรม GMP</li>
+        </ul>
+        <div class="service-price"><div><div class="price-tag">เริ่มต้น ฿120</div><div class="price-unit">สำหรับน้ำหนักไม่เกิน 5 กก.</div></div><button class="btn-primary" style="padding:0.55rem 1.1rem;font-size:0.82rem;" onclick="showPage('contact')">สอบถาม</button></div>
+      </div>
+      <div class="service-full-card">
+        <div class="service-icon">📦</div>
+        <h3>คลังสินค้า & Fulfillment</h3>
+        <p>บริการเก็บ แพ็ค และส่งสินค้าครบวงจร เหมาะสำหรับธุรกิจ e-Commerce ทุกขนาด ลดต้นทุนและเพิ่มประสิทธิภาพ</p>
+        <ul class="service-features">
+          <li>คลังสินค้ามาตรฐาน ISO</li><li>ระบบ WMS จัดการสต็อก</li><li>แพ็คสินค้าตามมาตรฐาน</li><li>เชื่อมต่อทุก Platform ออนไลน์</li>
+        </ul>
+        <div class="service-price"><div><div class="price-tag">เริ่มต้น ฿2,500/เดือน</div><div class="price-unit">พื้นที่เก็บสินค้า 10 ตร.ม.</div></div><button class="btn-primary" style="padding:0.55rem 1.1rem;font-size:0.82rem;" onclick="showPage('contact')">สอบถาม</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-footer"><span style="color:var(--muted);font-size:0.8rem;">© 2024 Go Express Co., Ltd.</span><button class="btn-ghost" style="padding:0.5rem 1.1rem;font-size:0.8rem;" onclick="showPage('home')">← กลับหน้าแรก</button></div>
+</div>
+
+<!-- ═══ PAGE: ABOUT ═══ -->
+<div class="page" id="page-about">
+  <div class="page-header">
+    <div class="breadcrumb"><span onclick="showPage('home')">หน้าแรก</span><span class="sep">/</span><span class="current">เกี่ยวกับเรา</span></div>
+    <h1>เกี่ยวกับเรา</h1>
+    <p>GoExpress บริษัทขนส่งที่เติบโตมาพร้อมกับความไว้วางใจของลูกค้ากว่า 15 ปี</p>
+  </div>
+ <div class="about-page-content">
+  <div class="about-images-grid">
+
+    <div class="about-img-block">
+      <div class="about-img-label">📊 Business Model</div>
+      <div class="about-img-frame">
+        <img src="images/bm.png" alt="Business Model Canvas"/>
+      </div>
+    </div>
+
+    <div class="about-img-block">
+      <div class="about-img-label">🏢 โครงสร้างองค์กร</div>
+      <div class="about-img-frame">
+        <img src="images/oc.png" alt="โครงสร้างองค์กร"/>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+  <div class="mini-footer"><span style="color:var(--muted);font-size:0.8rem;">© 2024 Go Express Co., Ltd.</span><button class="btn-ghost" style="padding:0.5rem 1.1rem;font-size:0.8rem;" onclick="showPage('home')">← กลับหน้าแรก</button></div>
+</div>
+
+<!-- ═══ PAGE: CONTACT ═══ -->
+<div class="page" id="page-contact">
+  <div class="page-header">
+    <div class="breadcrumb"><span onclick="showPage('home')">หน้าแรก</span><span class="sep">/</span><span class="current">ติดต่อเรา</span></div>
+    <h1>ติดต่อเรา</h1>
+    <p>ทีมงานของเราพร้อมให้บริการตลอด 24 ชั่วโมง ทุกวัน ไม่มีวันหยุด</p>
+  </div>
+  <div class="contact-page-content">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>ช่องทางติดต่อ</h3>
+        <div class="contact-item"><div class="c-icon">📞</div><div><div class="c-title">โทรศัพท์</div><div class="c-text">02-XXX-XXXX<br>ให้บริการ 24 ชั่วโมง ทุกวัน</div></div></div>
+        <div class="contact-item"><div class="c-icon">✉️</div><div><div class="c-title">อีเมล</div><div class="c-text">info@goexpress.th<br>ตอบกลับภายใน 2 ชั่วโมง</div></div></div>
+        <div class="contact-item"><div class="c-icon">📍</div><div><div class="c-title">ที่อยู่สำนักงานใหญ่</div><div class="c-text">123 ถนนสุขุมวิท แขวงคลองเตย<br>เขตคลองเตย กรุงเทพฯ 10110</div></div></div>
+        <div class="contact-item"><div class="c-icon">💬</div><div><div class="c-title">Line Official</div><div class="c-text">@goexpress<br>แชทออนไลน์ตอบไวที่สุด</div></div></div>
+        <div class="contact-item"><div class="c-icon">🕐</div><div><div class="c-title">เวลาทำการ</div><div class="c-text">Call Center: ทุกวัน 00:00-24:00<br>สาขา: จันทร์-เสาร์ 08:00-18:00</div></div></div>
+        <div style="margin-top:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;">
+          <h4 style="font-family:'Kanit',sans-serif;font-weight:700;font-size:0.95rem;margin-bottom:1rem;">🏢 สาขาทั่วประเทศ</h4>
+          <div style="display:flex;flex-direction:column;gap:0.55rem;">
+            <div style="display:flex;justify-content:space-between;font-size:0.83rem;"><span>กรุงเทพฯ</span><span style="color:var(--accent);font-weight:600;">12 สาขา</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.83rem;"><span>เชียงใหม่</span><span style="color:var(--accent);font-weight:600;">5 สาขา</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.83rem;"><span>ขอนแก่น</span><span style="color:var(--accent);font-weight:600;">3 สาขา</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.83rem;"><span>ภูเก็ต</span><span style="color:var(--accent);font-weight:600;">4 สาขา</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.83rem;"><span>และอีก 73 จังหวัด</span><span style="color:var(--muted);">100+ สาขา</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-card">
+        <h3>📝 ส่งข้อความถึงเรา</h3>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">ชื่อ-นามสกุล *</label><input class="form-control" type="text" placeholder="กรอกชื่อ-นามสกุล" /></div>
+          <div class="form-group"><label class="form-label">เบอร์โทรศัพท์ *</label><input class="form-control" type="tel" placeholder="0XX-XXX-XXXX" /></div>
+        </div>
+        <div class="form-group"><label class="form-label">อีเมล</label><input class="form-control" type="email" placeholder="example@email.com" /></div>
+        <div class="form-group">
+          <label class="form-label">หัวข้อ *</label>
+          <select class="form-control">
+            <option value="">เลือกหัวข้อ</option>
+            <option>สอบถามบริการส่งด่วน</option><option>ขอใบเสนอราคา</option><option>แจ้งปัญหาพัสดุ</option>
+            <option>บริการ Cold Chain</option><option>บริการ Fulfillment</option><option>บริการนำเข้า-ส่งออก</option><option>อื่นๆ</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">ข้อความ *</label><textarea class="form-control" placeholder="อธิบายรายละเอียดที่ต้องการสอบถาม..."></textarea></div>
+        <button class="btn-primary form-submit" onclick="submitContactForm()">📨 ส่งข้อความ</button>
+        <div class="success-toast" id="contact-success">✅ ส่งข้อความสำเร็จแล้ว! ทีมงานของเราจะติดต่อกลับภายใน 2 ชั่วโมง</div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-footer"><span style="color:var(--muted);font-size:0.8rem;">© 2024 Go Express Co., Ltd.</span><button class="btn-ghost" style="padding:0.5rem 1.1rem;font-size:0.8rem;" onclick="showPage('home')">← กลับหน้าแรก</button></div>
+</div>
+
+<script src="home.js"></script>
+</body>
+</html>

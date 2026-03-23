@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM</title>
+    <link rel="stylesheet" href="crm.css">
+</head>
+<body>
+
+    <!-- ════════════ SIDEBAR ════════════ -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">GO<span>EXPRESS</span></div>
+    <div class="sb-sub">CRM · SWIFT LOGISTICS</div>
+    <div class="sb-sub" style="margin-top:4px;letter-spacing:.5px;font-size:11px;color:rgba(255,255,255,.3)">ระบบบริหารลูกค้า v3.0</div>
+    <div class="sb-org" style="margin-top:10px;">🏢 GoExpress · กรุงเทพฯ</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-item active" data-page="overview" onclick="nav(this,'overview','ภาพรวม')">
+      <span class="sb-icon">◈</span>ภาพรวม
+    </div>
+    <div class="sb-item" data-page="customers" onclick="nav(this,'customers','ลูกค้า')">
+      <span class="sb-icon">👥</span>ลูกค้า
+    </div>
+    <div class="sb-item" data-page="support" onclick="nav(this,'support','Support')">
+      <span class="sb-icon">🎫</span>Support<span class="sb-badge">4</span>
+    </div>
+    <div class="sb-item" data-page="pipeline" onclick="nav(this,'pipeline','Pipeline')">
+      <span class="sb-icon">◎</span>Pipeline
+    </div>
+    <div class="sb-item" data-page="analytics" onclick="nav(this,'analytics','Analytics')">
+      <span class="sb-icon">≋</span>Analytics
+    </div>
+  </nav>
+  <div class="sb-footer">
+    <div class="sb-avatar">W</div>
+    <div>
+      <div class="sb-uname">นางสาวณัชชา รุนศรี</div>
+      <div class="sb-urole">Admin/Call Center</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ════════════ MAIN ════════════ -->
+<main class="main">
+  <header class="topbar">
+    <div>
+      <div class="tb-page" id="topTitle">ภาพรวม</div>
+      <div class="tb-meta" id="topMeta">07/03/2026 · SWIFT LOGISTICS · กรุงเทพฯ</div>
+    </div>
+    <div class="tb-right">
+      <div class="critical-btn" onclick="openModal('criticalTickets')">🚨 Critical ticket 1 รายการ</div>
+      <div class="ava-btn" onclick="showToast('โปรไฟล์: นางสาวพิมพ์ใจ')">W</div>
+    </div>
+  </header>
+
+  <div class="content" id="mainContent">
+
+  <!-- ═══════ PAGE: ภาพรวม ═══════ -->
+  <div class="page active" id="page-overview">
+    <div>
+      <div style="font-size:22px;font-weight:800;color:var(--text)">ภาพรวม CRM</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-top:4px">อัปเดตล่าสุด: 07/03/2026 · 12:41</div>
+    </div>
+    <div class="stats4">
+      <div class="stat-card" style="border-top-color:var(--accent)" onclick="nav(document.querySelector('[data-page=customers]'),'customers','ลูกค้า')">
+        <div class="sc-label">ลูกค้าทั้งหมด <span class="sc-icon">👥</span></div>
+        <div class="sc-val" style="color:var(--accent)">8</div>
+        <div class="sc-sub">ใช้งาน 6</div>
+      </div>
+      <div class="stat-card" style="border-top-color:var(--accent2)" onclick="showToast('รายได้สะสมปี 2026')">
+        <div class="sc-label">รายได้สะสม <span class="sc-icon">💳</span></div>
+        <div class="sc-val" style="color:var(--accent2)">฿300,000</div>
+        <div class="sc-sub">บาท ปี 2026</div>
+      </div>
+      <div class="stat-card" style="border-top-color:var(--red)" onclick="nav(document.querySelector('[data-page=support]'),'support','Support')">
+        <div class="sc-label">TICKET ค้างอยู่ <span class="sc-icon">🎫</span></div>
+        <div class="sc-val" style="color:var(--red)">4</div>
+        <div class="sc-sub">⚠ วิกฤต 1 รายการ</div>
+      </div>
+      <div class="stat-card" style="border-top-color:var(--yellow)" onclick="showToast('NPS Score 4.7/5 จากรีวิว 284 รายการ')">
+        <div class="sc-label">NPS SCORE <span class="sc-icon">⭐</span></div>
+        <div class="sc-val" style="color:var(--yellow)">4.7/5</div>
+        <div class="sc-sub">จากรีวิว 284 รายการ</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">TOP CUSTOMERS BY REVENUE</div></div>
+          <button class="btn btn-outline btn-sm" onclick="nav(document.querySelector('[data-page=customers]'),'customers','ลูกค้า')">ดูทั้งหมด →</button>
+        </div>
+        <div>
+          <div class="ov-row" onclick="selectCustomer('บริษัท เทคโนโลยี ไทย จำกัด','#6c63ff','ล','Platinum','สมหมาย ดีมาก','sommai@techth.co.th','142 ครั้ง','฿2,840K','องค์กร','94')">
+            <div class="ov-rank">#1</div>
+            <div class="ov-avatar" style="background:#6c63ff">ล</div>
+            <div><div class="ov-name">บริษัท เทคโนโลยี ไทย จำกัด</div><div class="ov-meta">142 ครั้ง · องค์กร</div></div>
+            <span class="badge b-platinum" style="margin-right:8px">Platinum</span>
+            <div class="ov-val">฿35,000</div>
+          </div>
+          <div class="ov-row" onclick="selectCustomer('บริษัท อาหารสด เดลิเวอรี่','#f97316','อ','Gold','อนุชา ผู้จัดการ','anucha@deliv.th','320 ครั้ง','฿1,920K','องค์กร','88')">
+            <div class="ov-rank">#2</div>
+            <div class="ov-avatar" style="background:#f97316">อ</div>
+            <div><div class="ov-name">บริษัท อาหารสด เดลิเวอรี่</div><div class="ov-meta">320 ครั้ง · องค์กร</div></div>
+            <span class="badge b-gold" style="margin-right:8px">Gold</span>
+            <div class="ov-val">฿30,000</div>
+          </div>
+          <div class="ov-row" onclick="selectCustomer('ร้านค้าออนไลน์ MegaShop','#3b82f6','ค','Gold','วิไล ค้าขาย','wilai@megashop.th','89 ครั้ง','฿890K','SME','78')">
+            <div class="ov-rank">#3</div>
+            <div class="ov-avatar" style="background:#3b82f6">ค</div>
+            <div><div class="ov-name">ร้านค้าออนไลน์ MegaShop</div><div class="ov-meta">89 ครั้ง · SME</div></div>
+            <span class="badge b-gold" style="margin-right:8px">Gold</span>
+            <div class="ov-val">฿20,000</div>
+          </div>
+          <div class="ov-row" onclick="selectCustomer('ห้างหุ้นส่วน กรีน ชัพพลาย','#ec4899','ห','Gold','หวาน สายส่ง','hwan@green.th','67 ครั้ง','฿536K','SME','72')">
+            <div class="ov-rank">#4</div>
+            <div class="ov-avatar" style="background:#ec4899">ห</div>
+            <div><div class="ov-name">ห้างหุ้นส่วน กรีน ชัพพลาย</div><div class="ov-meta">67 ครั้ง · SME</div></div>
+            <span class="badge b-gold" style="margin-right:8px">Gold</span>
+            <div class="ov-val">฿15,000</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">TICKETS ที่ต้องดำเนินการ</div><button class="btn btn-outline btn-sm" onclick="nav(document.querySelector('[data-page=support]'),'support','Support')">ดูทั้งหมด</button></div>
+        <div>
+          <div class="ticket-item" onclick="openModal('ticketDetail')">
+            <div class="ti-bar" style="background:var(--accent2)"></div>
+            <div><div class="ti-title">พัสดุล่าช้ากว่ากำหนด 2 วัน</div><div class="ti-company">บริษัท เทคโนโลยี ไทย จำกัด · 07/03/26 09:15</div><div class="ti-time"><span class="badge b-yellow" style="font-size:10px">สูง</span></div></div>
+          </div>
+          <div class="ticket-item" onclick="openModal('ticketDetail')">
+            <div class="ti-bar" style="background:var(--yellow)"></div>
+            <div><div class="ti-title">สอบถามค่าบริการขนส่งต่างจังหวัด</div><div class="ti-company">โรงพยาบาล เมดิคอล พลัส · 07/03/26 10:00</div><div class="ti-time"><span class="badge b-gray" style="font-size:10px">กลาง</span></div></div>
+          </div>
+          <div class="ticket-item" onclick="openModal('ticketDetail')">
+            <div class="ti-bar" style="background:var(--red)"></div>
+            <div><div class="ti-title">สินค้าเสียหายระหว่างขนส่ง</div><div class="ti-company">ร้านค้าออนไลน์ MegaShop · 06/03/26 16:30</div><div class="ti-time"><span class="badge b-red" style="font-size:10px">วิกฤต</span></div></div>
+          </div>
+          <div class="ticket-item" onclick="openModal('ticketDetail')">
+            <div class="ti-bar" style="background:var(--accent2)"></div>
+            <div><div class="ti-title">รถขนส่งมาช้ากว่า 1 ชั่วโมง</div><div class="ti-company">บริษัท อาหารสด เดลิเวอรี่ · 07/03/26 11:45</div><div class="ti-time"><span class="badge b-yellow" style="font-size:10px">สูง</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ PAGE: ลูกค้า ═══════ -->
+  <div class="page" id="page-customers">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-size:22px;font-weight:800">ลูกค้า</div><div style="font-size:13px;color:var(--text-muted);margin-top:3px">จัดการข้อมูลลูกค้าทั้งหมด</div></div>
+      <button class="btn btn-accent" onclick="openModal('addCustomer')">+ ลูกค้าใหม่</button>
+    </div>
+    <div class="cust-layout">
+      <div class="cust-left">
+        <div class="cust-search"><span style="color:var(--text-muted)">🔍</span><input type="text" placeholder="ค้นหาลูกค้า ชื่อ อีเมล หรือ ID..." oninput="filterCustomers(this.value)"></div>
+        <div class="cust-filters" id="custFilters">
+          <div class="filter-chip active" onclick="setFilter(this,'all')">ทุกระดับ</div>
+          <div class="filter-chip" onclick="setFilter(this,'platinum')">Platinum</div>
+          <div class="filter-chip" onclick="setFilter(this,'gold')">Gold</div>
+          <div class="filter-chip" onclick="setFilter(this,'silver')">Silver</div>
+          <div class="filter-chip" onclick="setFilter(this,'bronze')">Bronze</div>
+        </div>
+        <div class="cust-filters">
+          <div class="filter-chip active" onclick="setFilter2(this,'all')">ทุกประเภท</div>
+          <div class="filter-chip" onclick="setFilter2(this,'org')">องค์กร</div>
+          <div class="filter-chip" onclick="setFilter2(this,'sme')">SME</div>
+          <div class="filter-chip" onclick="setFilter2(this,'person')">บุคคล</div>
+        </div>
+        <div class="cust-list" id="custList">
+          <!-- filled by JS -->
+        </div>
+      </div>
+      <div class="cust-detail" id="custDetail">
+        <div class="cd-empty" style="display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;padding:40px">
+          <div class="cd-empty-icon">👤</div>
+          <div style="font-size:14px;color:var(--text-muted);margin-top:8px">เลือกลูกค้าเพื่อดูรายละเอียด</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ PAGE: Support ═══════ -->
+  <div class="page" id="page-support">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-size:22px;font-weight:800">Ticket Support</div><div style="font-size:13px;color:var(--text-muted);margin-top:3px">4 รายการที่ยังค้างอยู่</div></div>
+      <button class="btn btn-accent" onclick="openModal('addTicket')">+ เปิด Ticket ใหม่</button>
+    </div>
+    <div class="tk-filters" id="tkFilters">
+      <div class="filter-chip active" onclick="setTkFilter(this,'all')">ทั้งหมด</div>
+      <div class="filter-chip" onclick="setTkFilter(this,'open')">เปิด (2)</div>
+      <div class="filter-chip" onclick="setTkFilter(this,'progress')">กำลังดำเนินการ (2)</div>
+      <div class="filter-chip" onclick="setTkFilter(this,'done')">แก้ไขแล้ว (2)</div>
+      <div class="filter-chip" onclick="setTkFilter(this,'all')">ทุกระดับ</div>
+      <div class="filter-chip" onclick="setTkFilter(this,'critical')">วิกฤต</div>
+      <div class="filter-chip" onclick="setTkFilter(this,'high')">สูง</div>
+      <div class="filter-chip" onclick="setTkFilter(this,'med')">กลาง</div>
+      <div class="filter-chip" onclick="setTkFilter(this,'low')">ต่ำ</div>
+    </div>
+    <div class="tk-board">
+      <div class="tk-col">
+        <div class="tk-col-head"><div class="tk-col-dot" style="background:#3b82f6"></div><span class="tk-col-title">เปิด</span><span class="tk-col-cnt">2</span></div>
+        <div class="tk-card p-high-card" onclick="openModal('ticketDetail')">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div class="tk-id">TK001</div><span class="badge b-yellow">สูง</span></div>
+          <div class="tk-title">พัสดุล่าช้ากว่ากำหนด 2 วัน</div>
+          <div class="tk-company">บริษัท เทคโนโลยี ไทย จำกัด</div>
+          <div class="tk-footer"><span class="tk-assignee">นางสาวพิมพ์ใจ</span><span class="tk-date">07/03/26</span></div>
+        </div>
+        <div class="tk-card p-critical-card" onclick="openModal('ticketDetail')">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div class="tk-id">TK003</div><span class="badge b-red">วิกฤต</span></div>
+          <div class="tk-title">สินค้าเสียหายระหว่างขนส่ง</div>
+          <div class="tk-company">ร้านค้าออนไลน์ MegaShop</div>
+          <div class="tk-footer"><span class="tk-assignee">นางสาวพิมพ์ใจ</span><span class="tk-date">06/03/26</span></div>
+        </div>
+      </div>
+      <div class="tk-col">
+        <div class="tk-col-head"><div class="tk-col-dot" style="background:var(--yellow)"></div><span class="tk-col-title">กำลังดำเนินการ</span><span class="tk-col-cnt">2</span></div>
+        <div class="tk-card p-med-card" onclick="openModal('ticketDetail')">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div class="tk-id">TK002</div><span class="badge b-gray">กลาง</span></div>
+          <div class="tk-title">สอบถามค่าบริการขนส่งต่างจังหวัด</div>
+          <div class="tk-company">โรงพยาบาล เมดิคอล พลัส</div>
+          <div class="tk-footer"><span class="tk-assignee">นายพงษ์ศักดิ์</span><span class="tk-date">07/03/26</span></div>
+        </div>
+        <div class="tk-card p-high-card" onclick="openModal('ticketDetail')">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div class="tk-id">TK005</div><span class="badge b-yellow">สูง</span></div>
+          <div class="tk-title">รถขนส่งมาช้ากว่านัด 1 ชั่วโมง</div>
+          <div class="tk-company">บริษัท อาหารสด เดลิเวอรี่</div>
+          <div class="tk-footer"><span class="tk-assignee">นางสาวพิมพ์ใจ</span><span class="tk-date">07/03/26</span></div>
+        </div>
+      </div>
+      <div class="tk-col">
+        <div class="tk-col-head"><div class="tk-col-dot" style="background:var(--accent3)"></div><span class="tk-col-title">แก้ไขแล้ว</span><span class="tk-col-cnt">2</span></div>
+        <div class="tk-card p-low-card" onclick="openModal('ticketDetail')">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div class="tk-id">TK004</div><span class="badge b-green">ต่ำ</span></div>
+          <div class="tk-title">ขอเพิ่มรอบรับพัสดุประจำวัน</div>
+          <div class="tk-company">ห้างหุ้นส่วน กรีน ชัพพลาย</div>
+          <div class="tk-footer"><span class="tk-assignee">นายพงษ์ศักดิ์</span><span class="tk-date">05/03/26</span></div>
+        </div>
+        <div class="tk-card p-low-card" onclick="openModal('ticketDetail')">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div class="tk-id">TK006</div><span class="badge b-green">ต่ำ</span></div>
+          <div class="tk-title">สอบถามสถานะพัสดุ</div>
+          <div class="tk-company">คุณธนพล รักการส่ง</div>
+          <div class="tk-footer"><span class="tk-assignee">นายพงษ์ศักดิ์</span><span class="tk-date">04/03/26</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ PAGE: Pipeline ═══════ -->
+  <div class="page" id="page-pipeline">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-size:22px;font-weight:800">Pipeline การขาย</div><div style="font-size:13px;color:var(--text-muted);margin-top:3px">ติดตามโอกาสการขายทั้งหมด</div></div>
+      <button class="btn btn-accent" onclick="openModal('addPipeline')">+ เพิ่มดีล</button>
+    </div>
+    <div class="stats4">
+      <div class="stat-card" style="border-top-color:var(--accent)"><div class="sc-label">มูลค่า Pipeline <span class="sc-icon">💼</span></div><div class="sc-val" style="color:var(--accent)">฿8.4M</div><div class="sc-sub">18 ดีล</div></div>
+      <div class="stat-card" style="border-top-color:var(--accent3)"><div class="sc-label">ปิดแล้วเดือนนี้ <span class="sc-icon">✅</span></div><div class="sc-val" style="color:var(--accent3)">฿2.1M</div><div class="sc-sub">7 ดีล</div></div>
+      <div class="stat-card" style="border-top-color:var(--accent2)"><div class="sc-label">Win Rate <span class="sc-icon">🎯</span></div><div class="sc-val" style="color:var(--accent2)">64%</div><div class="sc-sub">ดีกว่าเดือนที่แล้ว</div></div>
+      <div class="stat-card" style="border-top-color:var(--yellow)"><div class="sc-label">Avg. Deal Size <span class="sc-icon">📊</span></div><div class="sc-val" style="color:var(--yellow)">฿467K</div><div class="sc-sub">ต่อดีล</div></div>
+    </div>
+    <div class="pipe-board">
+      <div class="pipe-col">
+        <div class="pipe-col-head"><span>ลีดใหม่</span><span>฿1.2M</span></div>
+        <div class="pipe-card" onclick="showToast('เปิดดีล: CPF Group')">
+          <div class="pc-company">CPF Group</div><div class="pc-route">กรุงเทพฯ → เชียงใหม่</div>
+          <div class="pc-val">฿420K</div><div class="pc-meta">ส่ง 3 ครั้ง/สัปดาห์</div>
+          <div class="pc-prob"><div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-muted);margin-bottom:4px"><span>โอกาส</span><span>25%</span></div><div class="prog"><div class="prog-fill" style="width:25%;background:var(--accent)"></div></div></div>
+        </div>
+        <div class="pipe-card" onclick="showToast('เปิดดีล: PTT Logistics')">
+          <div class="pc-company">PTT Logistics</div><div class="pc-route">ระยอง → กรุงเทพฯ</div>
+          <div class="pc-val">฿780K</div><div class="pc-meta">สารเคมีอุตสาหกรรม</div>
+          <div class="pc-prob"><div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-muted);margin-bottom:4px"><span>โอกาส</span><span>30%</span></div><div class="prog"><div class="prog-fill" style="width:30%;background:var(--accent)"></div></div></div>
+        </div>
+        <div class="pipe-total">รวม <b>2 ดีล</b> · ฿1.2M</div>
+      </div>
+      <div class="pipe-col">
+        <div class="pipe-col-head"><span>กำลังเจรจา</span><span>฿2.8M</span></div>
+        <div class="pipe-card" onclick="showToast('เปิดดีล: Thai Union')">
+          <div class="pc-company">Thai Union Group</div><div class="pc-route">สมุทรสาคร → ทั่วประเทศ</div>
+          <div class="pc-val">฿1.2M</div><div class="pc-meta">อาหารแช่แข็ง รายเดือน</div>
+          <div class="pc-prob"><div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-muted);margin-bottom:4px"><span>โอกาส</span><span>55%</span></div><div class="prog"><div class="prog-fill" style="width:55%;background:var(--yellow)"></div></div></div>
+        </div>
+        <div class="pipe-card" onclick="showToast('เปิดดีล: SCG')">
+          <div class="pc-company">SCG Packaging</div><div class="pc-route">สระบุรี → ภาคใต้</div>
+          <div class="pc-val">฿960K</div><div class="pc-meta">กระดาษ / บรรจุภัณฑ์</div>
+          <div class="pc-prob"><div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-muted);margin-bottom:4px"><span>โอกาส</span><span>50%</span></div><div class="prog"><div class="prog-fill" style="width:50%;background:var(--yellow)"></div></div></div>
+        </div>
+        <div class="pipe-card" onclick="showToast('เปิดดีล: Big C')">
+          <div class="pc-company">Big C Distribution</div><div class="pc-route">DC → สาขาทั่วประเทศ</div>
+          <div class="pc-val">฿640K</div><div class="pc-meta">สินค้าอุปโภคบริโภค</div>
+          <div class="pc-prob"><div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-muted);margin-bottom:4px"><span>โอกาส</span><span>45%</span></div><div class="prog"><div class="prog-fill" style="width:45%;background:var(--yellow)"></div></div></div>
+        </div>
+        <div class="pipe-total">รวม <b>3 ดีล</b> · ฿2.8M</div>
+      </div>
+      <div class="pipe-col">
+        <div class="pipe-col-head"><span>เสนอราคาแล้ว</span><span>฿2.9M</span></div>
+        <div class="pipe-card" onclick="showToast('เปิดดีล: Makro')">
+          <div class="pc-company">Makro Food Service</div><div class="pc-route">นครราชสีมา → ภาคอีสาน</div>
+          <div class="pc-val">฿1.4M</div><div class="pc-meta">อาหารสด ทุกวัน</div>
+          <div class="pc-prob"><div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-muted);margin-bottom:4px"><span>โอกาส</span><span>72%</span></div><div class="prog"><div class="prog-fill" style="width:72%;background:var(--accent2)"></div></div></div>
+        </div>
+        <div class="pipe-card" onclick="showToast('เปิดดีล: Central')">
+          <div class="pc-company">Central Retail</div><div class="pc-route">กรุงเทพฯ → หัวเมือง</div>
+          <div class="pc-val">฿1.5M</div><div class="pc-meta">แฟชั่น / ไลฟ์สไตล์</div>
+          <div class="pc-prob"><div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-muted);margin-bottom:4px"><span>โอกาส</span><span>68%</span></div><div class="prog"><div class="prog-fill" style="width:68%;background:var(--accent2)"></div></div></div>
+        </div>
+        <div class="pipe-total">รวม <b>2 ดีล</b> · ฿2.9M</div>
+      </div>
+      <div class="pipe-col">
+        <div class="pipe-col-head"><span>ปิดแล้ว ✅</span><span>฿1.5M</span></div>
+        <div class="pipe-card" onclick="showToast('ดีลปิดแล้ว: Bangkok Glass','success')" style="border:1px solid #a7f3d0">
+          <div class="pc-company">Bangkok Glass</div><div class="pc-route">บางกอกน้อย → โรงงาน</div>
+          <div class="pc-val" style="color:var(--accent3)">฿520K</div><div class="pc-meta">แก้ว / เปราะบาง</div>
+          <span class="badge b-green" style="margin-top:8px">ปิดแล้ว</span>
+        </div>
+        <div class="pipe-card" onclick="showToast('ดีลปิดแล้ว: Isuzu','success')" style="border:1px solid #a7f3d0">
+          <div class="pc-company">Isuzu Motors Thailand</div><div class="pc-route">ชลบุรี → ทั่วประเทศ</div>
+          <div class="pc-val" style="color:var(--accent3)">฿980K</div><div class="pc-meta">ชิ้นส่วนยานยนต์</div>
+          <span class="badge b-green" style="margin-top:8px">ปิดแล้ว</span>
+        </div>
+        <div class="pipe-total">รวม <b>2 ดีล</b> · ฿1.5M</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ PAGE: Analytics ═══════ -->
+  <div class="page" id="page-analytics">
+    <div><div style="font-size:22px;font-weight:800">Analytics</div><div style="font-size:13px;color:var(--text-muted);margin-top:3px">ข้อมูลสถิติและแนวโน้ม</div></div>
+    <div class="stats3">
+      <div class="stat-card" style="border-top-color:var(--accent)"><div class="sc-label">ยอดขายรวม YTD</div><div class="sc-val" style="color:var(--accent)">฿450,000</div><div class="sc-sub">เพิ่มขึ้น 18% YoY</div></div>
+      <div class="stat-card" style="border-top-color:var(--accent3)"><div class="sc-label">อัตราแก้ Ticket</div><div class="sc-val" style="color:var(--accent3)">33%</div><div class="sc-sub">2/6 resolved</div></div>
+      <div class="stat-card" style="border-top-color:var(--yellow)"><div class="sc-label">Avg. Response Time</div><div class="sc-val" style="color:var(--yellow)">4.2h</div><div class="sc-sub">ลดลง 0.8h จากเดือนก่อน</div></div>
+    </div>
+    <div class="card">
+      <div class="bar-chart-wrap">
+        <div class="bar-chart-title">REVENUE TREND (บาท) — 2025</div>
+        <div class="bar-chart" id="revenueChart"></div>
+      </div>
+    </div>
+    <div class="two-col-eq">
+      <div class="card">
+        <div class="card-head"><div class="card-title">CUSTOMER TIER DISTRIBUTION</div></div>
+        <div style="padding:16px 22px;display:flex;flex-direction:column;gap:12px">
+          <div class="dist-row"><div class="dist-name" style="color:#7c3aed">Platinum</div><div class="dist-bar-wrap"><div class="dist-fill" style="width:25%;background:#7c3aed"></div></div><div class="dist-cnt">2 (25%)</div></div>
+          <div class="dist-row"><div class="dist-name" style="color:#b45309">Gold</div><div class="dist-bar-wrap"><div class="dist-fill" style="width:37.5%;background:#f59e0b"></div></div><div class="dist-cnt">3 (38%)</div></div>
+          <div class="dist-row"><div class="dist-name" style="color:#64748b">Silver</div><div class="dist-bar-wrap"><div class="dist-fill" style="width:25%;background:#94a3b8"></div></div><div class="dist-cnt">2 (25%)</div></div>
+          <div class="dist-row"><div class="dist-name" style="color:#c2410c">Bronze</div><div class="dist-bar-wrap"><div class="dist-fill" style="width:12.5%;background:#f97316"></div></div><div class="dist-cnt">1 (13%)</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">CUSTOMER TYPE</div></div>
+        <div style="padding:16px 22px;display:flex;flex-direction:column;gap:12px">
+          <div class="dist-row"><div class="dist-name" style="color:var(--accent)">องค์กร</div><div class="dist-bar-wrap"><div class="dist-fill" style="width:37.5%;background:var(--accent)"></div></div><div class="dist-cnt">3 (38%)</div></div>
+          <div class="dist-row"><div class="dist-name" style="color:#06b6d4">SME</div><div class="dist-bar-wrap"><div class="dist-fill" style="width:37.5%;background:#06b6d4"></div></div><div class="dist-cnt">3 (38%)</div></div>
+          <div class="dist-row"><div class="dist-name" style="color:var(--accent3)">บุคคล</div><div class="dist-bar-wrap"><div class="dist-fill" style="width:25%;background:var(--accent3)"></div></div><div class="dist-cnt">2 (25%)</div></div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding:16px 22px">
+          <div class="dist-row" style="border:none;padding:0"><div style="font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;margin-bottom:12px">TICKET RESOLUTION RATE</div></div>
+          <div style="display:flex;align-items:center;gap:20px">
+            <div><div style="font-size:34px;font-weight:800;color:var(--accent3);font-family:'IBM Plex Mono',monospace">33%</div><div style="font-size:12px;color:var(--text-muted);margin-top:4px">2/6 resolved</div></div>
+            <div class="kpi-circle"><div class="kpi-pct">✓</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- ════ MODAL: Add Customer ════ -->
+<div class="modal-overlay" id="modal-addCustomer">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">+ ลูกค้าใหม่</div><div class="modal-close" onclick="closeModal('addCustomer')">✕</div></div>
+    <div class="modal-body">
+      <div class="form-row"><div class="form-group"><label class="form-label">ชื่อบริษัท / ชื่อ *</label><input class="form-input" id="newCustName" placeholder="เช่น บริษัท ABC จำกัด"></div><div class="form-group"><label class="form-label">ระดับ</label><select class="form-select"><option>Platinum</option><option>Gold</option><option>Silver</option><option>Bronze</option></select></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">ผู้ติดต่อ</label><input class="form-input" placeholder="ชื่อ-นามสกุล"></div><div class="form-group"><label class="form-label">ประเภท</label><select class="form-select"><option>องค์กร</option><option>SME</option><option>บุคคล</option></select></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">อีเมล</label><input class="form-input" type="email" placeholder="email@company.com"></div><div class="form-group"><label class="form-label">โทรศัพท์</label><input class="form-input" placeholder="0XX-XXX-XXXX"></div></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('addCustomer')">ยกเลิก</button><button class="btn btn-accent" onclick="saveNewCustomer()">💾 บันทึก</button></div>
+  </div>
+</div>
+
+<!-- ════ MODAL: Add Ticket ════ -->
+<div class="modal-overlay" id="modal-addTicket">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">🎫 เปิด Ticket ใหม่</div><div class="modal-close" onclick="closeModal('addTicket')">✕</div></div>
+    <div class="modal-body">
+      <div class="form-row"><div class="form-group"><label class="form-label">ลูกค้า *</label><select class="form-select"><option>บริษัท เทคโนโลยี ไทย จำกัด</option><option>ร้านค้าออนไลน์ MegaShop</option><option>โรงพยาบาล เมดิคอล พลัส</option></select></div><div class="form-group"><label class="form-label">ระดับความสำคัญ</label><select class="form-select"><option>วิกฤต</option><option>สูง</option><option>กลาง</option><option>ต่ำ</option></select></div></div>
+      <div class="form-group"><label class="form-label">หัวข้อปัญหา *</label><input class="form-input" placeholder="อธิบายปัญหาโดยย่อ..."></div>
+      <div class="form-group"><label class="form-label">รายละเอียด</label><textarea class="form-input" rows="3" placeholder="รายละเอียดเพิ่มเติม..."></textarea></div>
+      <div class="form-group"><label class="form-label">มอบหมายให้</label><select class="form-select"><option>นางสาวพิมพ์ใจ</option><option>นายพงษ์ศักดิ์</option></select></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('addTicket')">ยกเลิก</button><button class="btn btn-accent" onclick="saveTicket()">🎫 เปิด Ticket</button></div>
+  </div>
+</div>
+
+<!-- ════ MODAL: Ticket Detail ════ -->
+<div class="modal-overlay" id="modal-ticketDetail">
+  <div class="modal modal-wide">
+    <div class="modal-head"><div class="modal-title">🎫 TK003 — สินค้าเสียหายระหว่างขนส่ง</div><div class="modal-close" onclick="closeModal('ticketDetail')">✕</div></div>
+    <div class="modal-body">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <span class="badge b-red">วิกฤต</span>
+        <span class="badge b-yellow">กำลังดำเนินการ</span>
+        <span style="font-size:12px;color:var(--text-muted);padding:4px 0">ร้านค้าออนไลน์ MegaShop · 06/03/26 16:30</span>
+      </div>
+      <div style="background:var(--bg);border-radius:10px;padding:14px;border:1px solid var(--border);font-size:13.5px;color:var(--text-mid);line-height:1.7">
+        ลูกค้าแจ้งว่าสินค้าได้รับความเสียหายระหว่างการขนส่ง รูปถ่ายได้รับแล้ว กำลังประสานงานกับทีมควบคุมคุณภาพและทีมขนส่ง
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">สถานะ</label><select class="form-select"><option>กำลังดำเนินการ</option><option>เปิด</option><option>แก้ไขแล้ว</option></select></div>
+        <div class="form-group"><label class="form-label">มอบหมายให้</label><select class="form-select"><option>นางสาวพิมพ์ใจ</option><option>นายพงษ์ศักดิ์</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">บันทึกเพิ่มเติม</label><textarea class="form-input" rows="2" placeholder="เพิ่มหมายเหตุ..."></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-red btn-sm" onclick="closeModal('ticketDetail');showToast('ปิด Ticket TK003 แล้ว','success')">ปิด Ticket</button>
+      <button class="btn btn-ghost" onclick="closeModal('ticketDetail')">ยกเลิก</button>
+      <button class="btn btn-accent" onclick="closeModal('ticketDetail');showToast('บันทึกการอัปเดต TK003 แล้ว','success')">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODAL: Add Pipeline ════ -->
+<div class="modal-overlay" id="modal-addPipeline">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">💼 เพิ่มดีลใหม่</div><div class="modal-close" onclick="closeModal('addPipeline')">✕</div></div>
+    <div class="modal-body">
+      <div class="form-row"><div class="form-group"><label class="form-label">ชื่อบริษัท *</label><input class="form-input" placeholder="ชื่อลูกค้า"></div><div class="form-group"><label class="form-label">มูลค่าดีล (บาท)</label><input class="form-input" type="number" placeholder="0"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">เส้นทาง</label><input class="form-input" placeholder="ต้นทาง → ปลายทาง"></div><div class="form-group"><label class="form-label">ขั้นตอน</label><select class="form-select"><option>ลีดใหม่</option><option>กำลังเจรจา</option><option>เสนอราคาแล้ว</option></select></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">โอกาสปิด (%)</label><input class="form-input" type="number" min="0" max="100" placeholder="50"></div><div class="form-group"><label class="form-label">วันปิดคาดการณ์</label><input class="form-input" type="date"></div></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('addPipeline')">ยกเลิก</button><button class="btn btn-accent" onclick="closeModal('addPipeline');showToast('เพิ่มดีลใหม่สำเร็จ!','success')">💾 บันทึก</button></div>
+  </div>
+</div>
+
+<!-- ════ MODAL: Critical Tickets ════ -->
+<div class="modal-overlay" id="modal-criticalTickets">
+  <div class="modal">
+    <div class="modal-head" style="background:#7f1d1d"><div class="modal-title">🚨 Critical Tickets</div><div class="modal-close" onclick="closeModal('criticalTickets')">✕</div></div>
+    <div class="modal-body" style="gap:10px">
+      <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:10px;padding:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-muted)">TK003</span><span class="badge b-red">วิกฤต</span></div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin:6px 0">สินค้าเสียหายระหว่างขนส่ง</div>
+        <div style="font-size:12.5px;color:var(--text-muted)">ร้านค้าออนไลน์ MegaShop · นางสาวพิมพ์ใจ</div>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button class="btn btn-red btn-sm" onclick="closeModal('criticalTickets');openModal('ticketDetail')">เปิดดู Ticket</button>
+          <button class="btn btn-ghost btn-sm" onclick="closeModal('criticalTickets')">ปิด</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+    <script src="crm.js"></script>
+</body>
+</html>
